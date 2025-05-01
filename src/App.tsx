@@ -6,6 +6,7 @@ import RegisterUserType from './components/RegisterUserType';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LogInUser from './components/LogInUser';
 import GeneralHomePage from './components/GeneralHomePage';
+import HelpPage from './components/HelpPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/user-type" element={<RegisterUserType />} />
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/login" element={<LogInUser />} />
+        <Route path="/help" element={<HelpPage />} />
       </Routes>
     </div>
   );
