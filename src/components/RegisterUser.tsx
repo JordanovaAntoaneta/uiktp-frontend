@@ -1,12 +1,14 @@
 import { RegisterUserInterface } from "../interfaces/RegisterUserInterface";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
-import { Box, Button, FormControl, IconButton, Stack, TextField, Typography } from "@mui/material";
+import {
+    Box, Button, IconButton, Snackbar, Alert, Stack,
+    TextField, Typography, CircularProgress
+} from "@mui/material";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import TelegramIcon from '@mui/icons-material/Telegram';
-import { useNavigate } from 'react-router-dom';
-import RegisterImg from "../assets/RegisterUser/register-image.png"
+import RegisterImg from "../assets/RegisterUser/register-image.png";
 import "../styles/RegisterUser.css";
 
 const TitleStyle = {
@@ -28,8 +30,8 @@ const loginText = {
 
 const RegisterUser: React.FC = () => {
     const location = useLocation();
-    const roleFromNavigation = location.state?.role;    // 2 for Teacher or 4 for Student
     const navigate = useNavigate();
+    const roleFromNavigation = location.state?.role; // 2 for Teacher or 4 for Student
 
     const [formData, setFormData] = useState<RegisterUserInterface>({
         firstName: '',
@@ -42,59 +44,86 @@ const RegisterUser: React.FC = () => {
 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const resetForm = () => {
+        setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            phoneNumber: '',
+            role: roleFromNavigation,
+        });
+        setConfirmPassword('');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (formData.password !== confirmPassword) {
-            setError("Passwords don't match");
+            setSnackbarMessage("Passwords don't match");
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
             return;
         }
 
-        const userData = {
-            ...formData,
-        };
-
         try {
             setLoading(true);
-            setError('');
 
             const response = await fetch('http://localhost:8090/api/v1/User', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
+                body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
+
+                if (errorData?.errors) {
+                    const allErrors = Object.values(errorData.errors).flat().join(' ');
+                    throw new Error(allErrors);
+                }
+
                 throw new Error(errorData.message || 'Registration failed');
             }
-            navigate('/login');
+
+            setSnackbarMessage("Registration successful!");
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            resetForm();
+
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An error occurred');
+            setSnackbarMessage(err instanceof Error ? err.message : 'An error occurred');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
         } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <Box className="register-container">
             <Box className="register-image-container">
                 <img src={RegisterImg} alt="Register" className="register-image" />
             </Box>
-            <Box className="register-form-container" >
+            <Box className="register-form-container">
                 <Typography component="label" variant="body2" sx={TitleStyle} className="titleUserType">
                     Please Fill out form to Register!
                 </Typography>
                 <form onSubmit={handleSubmit}>
-                    <Stack spacing={2} className="form-stack" >
+                    <Stack spacing={2} className="form-stack">
                         <TextField
                             label="First name:"
                             name="firstName"
@@ -156,11 +185,15 @@ const RegisterUser: React.FC = () => {
                             variant="contained"
                             disabled={loading}
                             className="register-button"
+                            startIcon={loading && <CircularProgress size={20} />}
                         >
-                            Register
+                            {loading ? 'Registering...' : 'Register'}
                         </Button>
                         <Typography component="label" variant="body2" sx={loginText} className="titleUserType">
-                            Already have an account? <Button onClick={() => navigate('/login')} sx={{ textTransform: "capitalize" }}> <u><b>Log in</b></u> </Button>
+                            Already have an account?{' '}
+                            <Button onClick={() => navigate('/login')} sx={{ textTransform: "capitalize" }}>
+                                <u><b>Log in</b></u>
+                            </Button>
                         </Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                             <IconButton sx={{ color: "#656ED3" }}>
@@ -177,8 +210,23 @@ const RegisterUser: React.FC = () => {
                 </form>
             </Box>
 
+            {/* Snackbar feedback */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     );
-}
+};
 
 export default RegisterUser;
