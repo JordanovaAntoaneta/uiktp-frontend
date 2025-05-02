@@ -433,7 +433,7 @@ const GeneralHomePage: React.FC = () => {
                     <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Facebook />
                     </IconButton>
@@ -443,7 +443,7 @@ const GeneralHomePage: React.FC = () => {
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Twitter />
                     </IconButton>
-                </Box>
+                </Box> */}
             </Paper>
 
             <hr style={{ width: '100%', border: '1px solidrgb(100, 101, 110)', margin: '0' }} />

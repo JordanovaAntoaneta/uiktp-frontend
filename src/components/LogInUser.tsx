@@ -98,7 +98,7 @@ const LogInUser: React.FC = () => {
             setFormData({ email: '', password: '' });
 
             setTimeout(() => {
-                navigate('/create-quiz', {
+                navigate('/', {
                     state: {
                         accessToken: data.accessToken,
                         refreshToken: data.refreshToken,
@@ -173,11 +173,11 @@ const LogInUser: React.FC = () => {
                                 <u><b>Register</b></u>
                             </Button>
                         </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                        {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                             <IconButton sx={{ color: "#656ED3" }}><FacebookIcon /></IconButton>
                             <IconButton sx={{ color: "#656ED3" }}><WhatsAppIcon /></IconButton>
                             <IconButton sx={{ color: "#656ED3" }}><TelegramIcon /></IconButton>
-                        </Box>
+                        </Box> */}
                     </Stack>
                 </form>
             </Box>
