@@ -3,10 +3,11 @@ import logo from './logo.svg';
 import './App.css';
 import RegisterUser from './components/RegisterUser';
 import RegisterUserType from './components/RegisterUserType';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LogInUser from './components/LogInUser';
 import GeneralHomePage from './components/GeneralHomePage';
 import HelpPage from './components/HelpPage';
+import QuizesProfPage from './components/QuizesProfPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/login" element={<LogInUser />} />
         <Route path="/help" element={<HelpPage />} />
+        <Route path="/quizes-teacher" element={<QuizesProfPage />} />
       </Routes>
     </div>
   );
