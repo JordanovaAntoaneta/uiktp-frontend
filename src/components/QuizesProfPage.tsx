@@ -1,9 +1,10 @@
-import { Button, ButtonGroup, Paper, Typography } from "@mui/material";
+import { Box, Button, ButtonGroup, IconButton, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/GeneralHomePage/logo.png";
 import profileIcon from "../assets/profile-icon.png";
 import "../styles/QuizesProf.css"
+import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 const middleButtons = {
     gap: 2,
     '& .MuiButton-root': {
@@ -73,7 +74,7 @@ const QuizesProfPage: React.FC = () => {
                     <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
-                {/* <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Facebook />
                     </IconButton>
@@ -83,7 +84,7 @@ const QuizesProfPage: React.FC = () => {
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Twitter />
                     </IconButton>
-                </Box> */}
+                </Box>
             </Paper>
 
             <hr style={{ width: '100%', border: '1px solidrgb(100, 101, 110)', margin: '0' }} />
