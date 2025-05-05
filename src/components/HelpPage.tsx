@@ -106,7 +106,7 @@ const HelpPage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
+                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "#AFB3FF" }}><u>Help</u></Button>
                 </ButtonGroup>
                 <ButtonGroup sx={rightButtons}>
@@ -210,9 +210,20 @@ const HelpPage: React.FC = () => {
                     }}>
                         End-to-end payments and financial management in a single solution. Meet the right platform to help realize.
                     </Typography>
-                    <Button sx={{ ...buttonStyle, display: 'block', mx: 'auto', fontSize: '0.9rem', color: 'black', marginBottom: '50px' }}>
-                        Contact us via email
-                    </Button>
+                    <a href="mailto:support@eduwiz.com" style={{ textDecoration: 'none' }}>
+                        <Button
+                            sx={{
+                                ...buttonStyle,
+                                display: 'block',
+                                mx: 'auto',
+                                fontSize: '0.9rem',
+                                color: 'black',
+                                marginBottom: '50px',
+                            }}
+                        >
+                            Contact us via email
+                        </Button>
+                    </a>
                 </Stack>
             </Box>
 
@@ -222,7 +233,7 @@ const HelpPage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
+                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}><u>Help</u></Button>
                 </ButtonGroup>
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>

@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { LogInUserInterface } from "../interfaces/LogInUserInterface";
-import {
-    Box,
-    Button,
-    IconButton,
-    Stack,
-    TextField,
-    Typography,
-    Snackbar,
-    CircularProgress,
-} from "@mui/material";
+import { Box, Button, IconButton, Stack, TextField, Typography, Snackbar, CircularProgress, } from "@mui/material";
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
@@ -173,11 +164,9 @@ const LogInUser: React.FC = () => {
                                 <u><b>Register</b></u>
                             </Button>
                         </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                            <IconButton sx={{ color: "#656ED3" }}><FacebookIcon /></IconButton>
-                            <IconButton sx={{ color: "#656ED3" }}><WhatsAppIcon /></IconButton>
-                            <IconButton sx={{ color: "#656ED3" }}><TelegramIcon /></IconButton>
-                        </Box>
+                        <Button sx={{ display: 'flex', justifyContent: 'center', textTransform: "capitalize", fontSize: '0.8rem' }}>
+                            <u><b>Forgot your password?</b></u>
+                        </Button>
                     </Stack>
                 </form>
             </Box>

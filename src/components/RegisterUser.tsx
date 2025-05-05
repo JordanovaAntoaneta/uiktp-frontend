@@ -195,17 +195,6 @@ const RegisterUser: React.FC = () => {
                                 <u><b>Log in</b></u>
                             </Button>
                         </Typography>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                            <IconButton sx={{ color: "#656ED3" }}>
-                                <FacebookIcon />
-                            </IconButton>
-                            <IconButton sx={{ color: "#656ED3" }}>
-                                <WhatsAppIcon />
-                            </IconButton>
-                            <IconButton sx={{ color: "#656ED3" }}>
-                                <TelegramIcon />
-                            </IconButton>
-                        </Box>
                     </Stack>
                 </form>
             </Box>

@@ -8,6 +8,7 @@ import LogInUser from './components/LogInUser';
 import GeneralHomePage from './components/GeneralHomePage';
 import HelpPage from './components/HelpPage';
 import QuizesProfPage from './components/QuizesProfPage';
+import GenerateQuizPage from './components/GenerateQuizPage';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/login" element={<LogInUser />} />
         <Route path="/help" element={<HelpPage />} />
         <Route path="/quizes-teacher" element={<QuizesProfPage />} />
+        <Route path="/quizes-student" element={<QuizesProfPage />} />
+        <Route path="/generate-quiz" element={<GenerateQuizPage />} />
       </Routes>
     </div>
   );

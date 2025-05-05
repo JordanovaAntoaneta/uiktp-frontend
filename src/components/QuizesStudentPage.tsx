@@ -73,7 +73,7 @@ const cloudTextStyle = {
     marginRight: 5,
 }
 
-const QuizesProfPage: React.FC = () => {
+const QuizesStudentPage: React.FC = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
@@ -84,7 +84,7 @@ const QuizesProfPage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "#AFB3FF" }}><u>Quizzes</u></Button>
+                    <Button onClick={() => navigate('/quizes-student')} sx={{ color: "#AFB3FF" }}><u>Quizzes</u></Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
                 <Box>
@@ -100,11 +100,9 @@ const QuizesProfPage: React.FC = () => {
             <Box className="banner" sx={{ bgcolor: '#eef0fe' }}>
                 <Stack className="btn" sx={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '100px' }}>
                     <Typography sx={{ ...cloudTextStyle, fontSize: '64pt' }}>
-                        Create a new quiz!
+                        Are you ready to start
+                        learning?
                     </Typography>
-                    <Button onClick={() => navigate('/generate-quiz')} sx={{ ...buttonStyle2, display: 'block', mx: 'auto', fontSize: '1.3rem' }}>
-                        Start Now!
-                    </Button>
                 </Stack>
                 <Box className="image-container">
                     <img src={loginImg} alt="LogIn" className="login-image" />
@@ -147,4 +145,4 @@ const QuizesProfPage: React.FC = () => {
     );
 }
 
-export default QuizesProfPage;
+export default QuizesStudentPage;

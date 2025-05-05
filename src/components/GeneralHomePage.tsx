@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, CardMedia, IconButton, Paper, Stack, Typography } from "@mui/material";
-import InstagramIcon from '@mui/icons-material/Instagram';
-import React from "react";
+import React, { useState } from "react";
 import logo from '../assets/GeneralHomePage/logo.png';
 import coverImg from '../assets/GeneralHomePage/cover-image.png';
 import cloudImg from '../assets/GeneralHomePage/section-one-bottom.png';
@@ -12,6 +11,7 @@ import sectionThreeImg from '../assets/GeneralHomePage/section-three-img.png';
 import circleImgs from '../assets/GeneralHomePage/circle-images-bundle.png';
 import { useNavigate } from "react-router-dom";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import { UserInterface } from "../interfaces/UserInterface";
 
 const middleButtons = {
     gap: 2,
@@ -115,6 +115,32 @@ const boxStyle = {
 
 const GeneralHomePage: React.FC = () => {
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState<UserInterface>({} as UserInterface);
+
+    const getCurrentUser = async () => {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+
+            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            setCurrentUser(await response.json());
+            console.log("Current user:", currentUser);
+            return currentUser;
+        } catch (error) {
+            console.error("Failed to fetch user data:", error);
+            return null;
+        }
+    };
 
     return (
         <div className="general-home-page">
@@ -124,7 +150,7 @@ const GeneralHomePage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
+                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
                 <ButtonGroup sx={rightButtons}>
@@ -162,7 +188,7 @@ const GeneralHomePage: React.FC = () => {
                         <Typography sx={{ fontFamily: "'Montserrat', Arial, sans-serif !important", fontWeight: 100, fontSize: '1.15rem', textAlign: 'left' }}>
                             Make fun interactive quizzes to test your audience's <br /> knowledge, run a quiz night with friends, or help students <br /> study.
                         </Typography>
-                        <Button sx={buttonStyle1} onClick={() => navigate('/create-quiz')}>
+                        <Button className="section-one" sx={buttonStyle1} onClick={() => navigate('/create-quiz')}>
                             Create a Quiz
                         </Button>
                     </Stack>
@@ -430,14 +456,14 @@ const GeneralHomePage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "black" }}><u>Home</u></Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
+                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Facebook />
                     </IconButton>
-                    <IconButton>
+                    <IconButton sx={{ color: "#656ED3" }}>
                         <Instagram />
                     </IconButton>
                     <IconButton sx={{ color: "#656ED3" }}>
