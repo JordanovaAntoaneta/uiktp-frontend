@@ -9,6 +9,13 @@ import GeneralHomePage from './components/GeneralHomePage';
 import HelpPage from './components/HelpPage';
 import QuizesProfPage from './components/QuizesProfPage';
 import GenerateQuizPage from './components/GenerateQuizPage';
+import QuizStudentDetailsPage from './components/QuizStudentDetailsPage';
+import QuizPreviewPage from './components/QuizPreviewPage';
+import QuizFinishedPage from './components/QuizFinishedPage';
+import QuizCreatedPage from './components/QuizCreatedPage';
+import QuizProfDetailsPage from './components/QuizProfDetailsPage';
+
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   return (
@@ -22,6 +29,11 @@ function App() {
         <Route path="/quizes-teacher" element={<QuizesProfPage />} />
         <Route path="/quizes-student" element={<QuizesProfPage />} />
         <Route path="/generate-quiz" element={<GenerateQuizPage />} />
+        <Route path="/quiz-student-details" element={<QuizStudentDetailsPage />} />
+        <Route path="/quiz-preview" element={<QuizPreviewPage />} />
+        <Route path="/quiz-finished" element={<QuizFinishedPage />} />
+        <Route path="/quiz-created" element={<QuizCreatedPage />} />
+        <Route path="/quiz-prof-details" element={<QuizProfDetailsPage />} />
       </Routes>
     </div>
   );
