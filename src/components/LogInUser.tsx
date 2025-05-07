@@ -96,7 +96,7 @@ const LogInUser: React.FC = () => {
                         email: formData.email
                     }
                 });
-            }, 1000);
+            }, 400);
             ;
 
         } catch (error) {

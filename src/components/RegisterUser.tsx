@@ -2,12 +2,9 @@ import { RegisterUserInterface } from "../interfaces/RegisterUserInterface";
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from "react";
 import {
-    Box, Button, IconButton, Snackbar, Alert, Stack,
+    Box, Button, Snackbar, Alert, Stack,
     TextField, Typography, CircularProgress
 } from "@mui/material";
-import FacebookIcon from '@mui/icons-material/Facebook';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import TelegramIcon from '@mui/icons-material/Telegram';
 import RegisterImg from "../assets/RegisterUser/register-image.png";
 import "../styles/RegisterUser.css";
 
@@ -103,7 +100,7 @@ const RegisterUser: React.FC = () => {
 
             setTimeout(() => {
                 navigate('/login');
-            }, 2000);
+            }, 1000);
         } catch (err) {
             setSnackbarMessage(err instanceof Error ? err.message : 'An error occurred');
             setSnackbarSeverity('error');

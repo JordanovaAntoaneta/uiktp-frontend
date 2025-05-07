@@ -1,5 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, ButtonGroup, IconButton, Paper, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from '../assets/GeneralHomePage/logo.png';
 import coverPhoto from '../assets/HelpPage/tutorial-example.png';
@@ -7,6 +7,8 @@ import { Facebook, Instagram, Margin, Message, Twitter } from "@mui/icons-materi
 import '../styles/HelpPage.css';
 import AddIcon from '@mui/icons-material/Add';
 import messageIcon from '../assets/HelpPage/message-icon.png';
+import profileIcon from '../assets/profile-icon.png';
+import { UserInterface } from "../interfaces/UserInterface";
 
 const middleButtons = {
     gap: 2,
@@ -97,6 +99,64 @@ const HelpPage: React.FC = () => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
+
+    const getCurrentUser = async () => {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) return null;
+
+            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            const userData = await response.json();
+            setCurrentUser(userData);
+            return userData;
+        } catch (error) {
+            console.error("Failed to fetch user data:", error);
+            return null;
+        }
+    };
+
+    useEffect(() => {
+        getCurrentUser();
+    }, []);
+
+    useEffect(() => {
+        console.log("Current user:", currentUser);
+    }, [currentUser]);
+
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        setCurrentUser(null);
+        setIsLoggedIn(false);
+        navigate('/');
+    };
+
+
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
+
+    const UserType = () => {
+        if (isLoggedIn) {
+            if (currentUser?.type === "Teacher") {
+                navigate('/quizes-teacher');
+            } else if (currentUser?.type === "Student") {
+                navigate('/quizes-student');
+            }
+        } else {
+            navigate('/login');
+        }
+    }
+
     return (
         <div className="help-page">
 
@@ -106,13 +166,24 @@ const HelpPage: React.FC = () => {
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
+                    <Button onClick={UserType} sx={{ color: "black" }}>Quizzes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "#AFB3FF" }}><u>Help</u></Button>
                 </ButtonGroup>
-                <ButtonGroup sx={rightButtons}>
-                    <Button onClick={() => navigate('/login')} sx={{ ...rightButtons, bgcolor: " #E3E3E3", borderRadius: 2, color: "black" }}>Log In</Button>
-                    <Button onClick={() => navigate('/user-type')} sx={{ ...rightButtons, bgcolor: "rgb(106, 62, 167)", borderRadius: 2, color: "white" }}>Sign up</Button>
-                </ButtonGroup>
+                {isLoggedIn ? (
+                    <Box>
+                        <ButtonGroup sx={rightButtons}>
+                            <Button onClick={handleLogout} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2 }}>Log out</Button>
+                        </ButtonGroup>
+                        <Button onClick={() => navigate('/user-details')}>
+                            <img src={profileIcon} alt="profile icon" style={{ width: '40%', height: 'auto' }} />
+                        </Button>
+                    </Box>
+                ) : (
+                    <ButtonGroup sx={rightButtons}>
+                        <Button onClick={() => navigate('/login')} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2, color: "black" }}>Log In</Button>
+                        <Button onClick={() => navigate('/user-type')} sx={{ ...rightButtons, bgcolor: "rgb(106, 62, 167)", borderRadius: 2, color: "white" }}>Sign up</Button>
+                    </ButtonGroup>
+                )}
             </Paper>
 
             {/* Main content */}

@@ -155,10 +155,11 @@ const GeneralHomePage: React.FC = () => {
     const handleLogout = () => {
         localStorage.removeItem("accessToken");
         setCurrentUser(null);
+        setIsLoggedIn(false);
         navigate('/');
     };
 
-    const isLoggedIn = !!localStorage.getItem("accessToken");
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
     const getSectionOneButton = () => {
         if (!isLoggedIn) {
