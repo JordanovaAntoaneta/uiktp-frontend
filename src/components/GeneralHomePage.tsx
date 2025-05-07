@@ -1,5 +1,5 @@
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, CardMedia, IconButton, Paper, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from '../assets/GeneralHomePage/logo.png';
 import coverImg from '../assets/GeneralHomePage/cover-image.png';
 import cloudImg from '../assets/GeneralHomePage/section-one-bottom.png';
@@ -12,6 +12,7 @@ import circleImgs from '../assets/GeneralHomePage/circle-images-bundle.png';
 import { useNavigate } from "react-router-dom";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { UserInterface } from "../interfaces/UserInterface";
+import profileIcon from '../assets/profile-icon.png';
 
 const middleButtons = {
     gap: 2,
@@ -115,11 +116,12 @@ const boxStyle = {
 
 const GeneralHomePage: React.FC = () => {
     const navigate = useNavigate();
-    const [currentUser, setCurrentUser] = useState<UserInterface>({} as UserInterface);
+    const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
 
     const getCurrentUser = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) return null;
 
             const response = await fetch("http://localhost:8090/api/v1/User/me", {
                 method: "GET",
@@ -133,30 +135,115 @@ const GeneralHomePage: React.FC = () => {
                 throw new Error(`Error: ${response.status}`);
             }
 
-            setCurrentUser(await response.json());
-            console.log("Current user:", currentUser);
-            return currentUser;
+            const userData = await response.json();
+            setCurrentUser(userData);
+            return userData;
         } catch (error) {
             console.error("Failed to fetch user data:", error);
             return null;
         }
     };
 
+    useEffect(() => {
+        getCurrentUser();
+    }, []);
+
+    useEffect(() => {
+        console.log("Current user:", currentUser);
+    }, [currentUser]);
+
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        setCurrentUser(null);
+        navigate('/');
+    };
+
+    const isLoggedIn = !!localStorage.getItem("accessToken");
+
+    const getSectionOneButton = () => {
+        if (!isLoggedIn) {
+            return (
+                <Button
+                    className="section-one-btn"
+                    sx={buttonStyle1}
+                    onClick={() => navigate('/login')}
+                >
+                    Create a Quiz
+                </Button>
+            );
+        }
+
+        if (currentUser?.type === "Student") {
+            return (
+                <Button
+                    className="section-one-btn"
+                    sx={buttonStyle1}
+                    onClick={() => navigate('/quizes-student')}
+                >
+                    Solve a quiz!
+                </Button>
+            );
+        }
+
+        return (
+            <Button
+                className="section-one-btn"
+                sx={buttonStyle1}
+                onClick={() => navigate('/create-quiz')}
+            >
+                Create a Quiz
+            </Button>
+        );
+    };
+
+    const getStartNowButton = () => {
+        let targetPath = '';
+        if (isLoggedIn) {
+            if (currentUser?.type === "Student")
+                targetPath = '/quizes-student';
+            else
+                targetPath = '/quizes-teacher';
+        } else {
+            targetPath = '/login';
+        }
+
+        return (
+            <Button
+                className="start-btn"
+                sx={{ ...buttonStyle2, display: 'block', mx: 'auto', fontSize: '0.9rem' }}
+                onClick={() => navigate(targetPath)}
+            >
+                Start Now!
+            </Button>
+        );
+    };
+
     return (
         <div className="general-home-page">
-
             {/* Navigation menu */}
             <Paper elevation={2} sx={paperStyle}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
                 <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                     <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
+                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
                     <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                 </ButtonGroup>
-                <ButtonGroup sx={rightButtons}>
-                    <Button onClick={() => navigate('/login')} sx={{ ...rightButtons, bgcolor: " #E3E3E3", borderRadius: 2, color: "black" }}>Log In</Button>
-                    <Button onClick={() => navigate('/user-type')} sx={{ ...rightButtons, bgcolor: "rgb(106, 62, 167)", borderRadius: 2, color: "white" }}>Sign up</Button>
-                </ButtonGroup>
+
+                {isLoggedIn ? (
+                    <Box>
+                        <ButtonGroup sx={rightButtons}>
+                            <Button onClick={handleLogout} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2 }}>Log out</Button>
+                        </ButtonGroup>
+                        <Button onClick={() => navigate('/user-details')}>
+                            <img src={profileIcon} alt="profile icon" style={{ width: '40%', height: 'auto' }} />
+                        </Button>
+                    </Box>
+                ) : (
+                    <ButtonGroup sx={rightButtons}>
+                        <Button onClick={() => navigate('/login')} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2, color: "black" }}>Log In</Button>
+                        <Button onClick={() => navigate('/user-type')} sx={{ ...rightButtons, bgcolor: "rgb(106, 62, 167)", borderRadius: 2, color: "white" }}>Sign up</Button>
+                    </ButtonGroup>
+                )}
             </Paper>
 
             {/* Section one */}
@@ -168,40 +255,20 @@ const GeneralHomePage: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     background: '#fff',
-                    padding: 'none !important',
-                    margin: 'none !important',
                 }}
             >
-                <Box
-                    className="containter-left"
-                    sx={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: { xs: 'center', md: 'center' },
-                    }}
-                >
-                    <Stack spacing={3} sx={{ padding: 'none !important', margin: 'none !important' }}>
+                <Box className="containter-left" sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                    <Stack spacing={3}>
                         <Typography variant="h4" sx={TitleStyle}>
                             Quiz Maker: Create a Quiz <br /> to challenge your audience
                         </Typography>
                         <Typography sx={{ fontFamily: "'Montserrat', Arial, sans-serif !important", fontWeight: 100, fontSize: '1.15rem', textAlign: 'left' }}>
                             Make fun interactive quizzes to test your audience's <br /> knowledge, run a quiz night with friends, or help students <br /> study.
                         </Typography>
-                        <Button className="section-one" sx={buttonStyle1} onClick={() => navigate('/create-quiz')}>
-                            Create a Quiz
-                        </Button>
+                        {getSectionOneButton()}
                     </Stack>
                 </Box>
-                <Box
-                    className="containter-right"
-                    sx={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: { xs: 'center', md: 'center' },
-                    }}
-                >
+                <Box className="containter-right" sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                     <img
                         src={coverImg}
                         alt="Cover"
@@ -215,6 +282,8 @@ const GeneralHomePage: React.FC = () => {
                     />
                 </Box>
             </Box>
+
+            {/* Cloud section with conditional button */}
             <Box
                 className="cloud-section"
                 sx={{
@@ -230,9 +299,7 @@ const GeneralHomePage: React.FC = () => {
                     <Typography sx={cloudTextStyle}>
                         Discover our tools and create engaging quizzes that enhance <br /> learning and challenge students effectively.
                     </Typography>
-                    <Button sx={{ ...buttonStyle2, display: 'block', mx: 'auto', fontSize: '0.9rem' }}>
-                        Start Now!
-                    </Button>
+                    {getStartNowButton()}
                 </Stack>
             </Box>
 
