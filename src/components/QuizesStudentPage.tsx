@@ -206,7 +206,7 @@ const QuizesStudentPage: React.FC = () => {
 
             <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={3} sx={{ marginBottom: '100px', marginLeft: '5%', marginRight: '5%' }}>
                 {quizzes.map((quiz, index) => (
-                    <Button onClick={() => navigate(`/quiz-student-details/${quiz.title}-${quiz.id}`, { state: { quizId: quiz.id } })} key={quiz.id} sx={{ padding: 0 }}>
+                    <Button onClick={() => navigate(`/quiz-student-details`, { state: { quizId: quiz.id } })} key={quiz.id} sx={{ padding: 0 }}>
                         <Card elevation={3} sx={{ '.css-1lt5qva-MuiCardContent-root': { padding: '0' } }}>
                             <CardActionArea>
                                 <CardContent>
