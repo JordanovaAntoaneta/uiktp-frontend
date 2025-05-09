@@ -122,6 +122,7 @@ const GeneralHomePage: React.FC = () => {
 
     return (
         <div className="general-home-page">
+
             {/* Navigation menu */}
             <Paper elevation={2} sx={paperStyle}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />

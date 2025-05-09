@@ -9,6 +9,7 @@ import loginImg from "../assets/LogInUser/login-image.png";
 import { UserInterface } from "../interfaces/UserInterface";
 import { QuizInterface } from "../interfaces/QuizInterface";
 
+
 const middleButtons = {
     gap: 2,
     '& .MuiButton-root': {
@@ -173,19 +174,44 @@ const QuizesProfPage: React.FC = () => {
             {/* Navigation menu */}
             <Paper elevation={2} sx={paperStyle}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
-                <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
-                    <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "#AFB3FF" }}><u>Quizzes</u></Button>
-                    <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
-                </ButtonGroup>
-                <Box>
-                    <ButtonGroup sx={rightButtons}>
-                        <Button onClick={handleLogout} sx={{ ...rightButtons, bgcolor: " #E3E3E3", borderRadius: 2, color: "black" }}>Log Out</Button>
+                {isLoggedIn ? (
+                    currentUser?.type === "Professor" ? (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
+                            <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "#AFB3FF" }}><u>Quizzes</u></Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                        </ButtonGroup>
+                    ) : (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}>Home</Button>
+                            <Button onClick={() => navigate('/quizes-student')} sx={{ color: "black" }}><u>Quizzes</u></Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                            <Button onClick={() => navigate('/my-invites')} sx={{ color: "black" }}>Invites</Button>
+                        </ButtonGroup>
+                    )
+                ) : (
+                    <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                        <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}>Home</Button>
+                        <Button onClick={() => navigate('/login')} sx={{ color: "black" }}><u>Quizzes</u></Button>
+                        <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                     </ButtonGroup>
-                    <Button onClick={() => navigate('/user-details')}>
-                        <img src={profileIcon} alt="profile icon" style={{ width: '40%', height: 'auto' }} />
-                    </Button>
-                </Box>
+                )}
+
+                {isLoggedIn ? (
+                    <Box>
+                        <ButtonGroup sx={rightButtons}>
+                            <Button onClick={handleLogout} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2 }}>Log out</Button>
+                        </ButtonGroup>
+                        <Button onClick={() => navigate('/user-details')}>
+                            <img src={profileIcon} alt="profile icon" style={{ width: '40%', height: 'auto' }} />
+                        </Button>
+                    </Box>
+                ) : (
+                    <ButtonGroup sx={rightButtons}>
+                        <Button onClick={() => navigate('/login')} sx={{ ...rightButtons, bgcolor: "#E3E3E3", borderRadius: 2, color: "black" }}>Log In</Button>
+                        <Button onClick={() => navigate('/user-type')} sx={{ ...rightButtons, bgcolor: "rgb(106, 62, 167)", borderRadius: 2, color: "white" }}>Sign up</Button>
+                    </ButtonGroup>
+                )}
             </Paper>
 
             <Box className="banner" sx={{ bgcolor: '#eef0fe' }}>
@@ -228,11 +254,29 @@ const QuizesProfPage: React.FC = () => {
             {/* Footer */}
             <Paper sx={{ ...paperStyle, marginBottom: 'none', bgcolor: '#AFB3FF' }}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
-                <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
-                    <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
-                    <Button onClick={() => navigate('/quiz-student')} sx={{ color: "black" }}><u>Quizzes</u></Button>
-                    <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
-                </ButtonGroup>
+                {isLoggedIn ? (
+                    currentUser?.type === "Professor" ? (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
+                            <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}><u>Quizzes</u></Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                        </ButtonGroup>
+                    ) : (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
+                            <Button onClick={() => navigate('/quizes-student')} sx={{ color: "black" }}><u>Quizzes</u></Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                            <Button onClick={() => navigate('/my-invites')} sx={{ color: "black" }}>Invites</Button>
+                        </ButtonGroup>
+                    )
+                ) : (
+                    <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                        <Button onClick={() => navigate('/')} sx={{ color: "black" }}>Home</Button>
+                        <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}><u>Quizzes</u></Button>
+                        <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                    </ButtonGroup>
+                )}
+
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Facebook />

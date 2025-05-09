@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LogInUserInterface } from "../interfaces/LogInUserInterface";
 import { Box, Button, IconButton, Stack, TextField, Typography, Snackbar, CircularProgress, } from "@mui/material";
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
@@ -165,7 +165,7 @@ const LogInUser: React.FC = () => {
                             </Button>
                         </Typography>
                         <Button
-                            onClick={() => {
+                            onClick={async () => {
                                 if (!formData.email.trim()) {
                                     setSnackbar({
                                         open: true,
@@ -174,31 +174,41 @@ const LogInUser: React.FC = () => {
                                     });
                                     return;
                                 }
-                                const handleConfirm = async () => {
-                                    try {
-                                        const accessToken = localStorage.getItem("accessToken");
-                                        if (!accessToken) return null;
 
-                                        const response = await fetch("http://localhost:8090/api/v1/User/forgot-password", {
-                                            method: 'POST',
-                                            headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify(formData.email)
-                                        });
+                                try {
+                                    const accessToken = localStorage.getItem("accessToken");
+                                    if (!accessToken) return;
 
-                                        if (!response.ok) {
-                                            const errorData = await response.json();
+                                    const response = await fetch("http://localhost:8090/api/v1/User/forgot-password", {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(formData.email)
+                                    });
 
-                                            if (errorData?.errors) {
-                                                const allErrors = Object.values(errorData.errors).flat().join(' ');
-                                                throw new Error(allErrors);
-                                            }
+                                    if (!response.ok) {
+                                        const errorData = await response.json();
 
-                                            throw new Error(errorData.message || 'Forgot password failed');
+                                        if (errorData?.errors) {
+                                            const allErrors = Object.values(errorData.errors).flat().join(' ');
+                                            throw new Error(allErrors);
                                         }
-                                    } catch (error) {
-                                        console.error('Error during forgot password:', error);
+
+                                        throw new Error(errorData.message || 'Forgot password failed');
                                     }
-                                };
+
+                                    setSnackbar({
+                                        open: true,
+                                        message: 'Reset link sent to your email.',
+                                        severity: 'success'
+                                    });
+                                } catch (error) {
+                                    console.error('Error during forgot password:', error);
+                                    setSnackbar({
+                                        open: true,
+                                        message: 'Something went wrong. Please try again.',
+                                        severity: 'error'
+                                    });
+                                }
                             }}
                             sx={{
                                 display: 'flex',
@@ -207,7 +217,7 @@ const LogInUser: React.FC = () => {
                                 fontSize: '0.8rem'
                             }}
                         >
-                            <u><b>Forgot your password?</b></u>
+                            Forgot password?
                         </Button>
                     </Stack>
                 </form>
