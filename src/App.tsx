@@ -18,6 +18,7 @@ import QuizesStudentPage from './components/QuizesStudentPage';
 import InvitesPage from './components/InvitesPage';
 import ResetPasswordPage from './components/ResetPasswordPage';
 import UserDetails from './components/UserDetails';
+import ChangePassword from './components/ChangePassword';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         <Route path="/my-invites" element={<InvitesPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path='/user-details' element={<UserDetails />} />
+        <Route path='/change-password' element={<ChangePassword />} />
       </Routes>
     </div>
   );
