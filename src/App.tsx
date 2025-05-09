@@ -16,7 +16,7 @@ import QuizCreatedPage from './components/QuizCreatedPage';
 import QuizProfDetailsPage from './components/QuizProfDetailsPage';
 import QuizesStudentPage from './components/QuizesStudentPage';
 import InvitesPage from './components/InvitesPage';
-import ForgotPasswordPage from './components/ForgotPasswordPage';
+import ResetPasswordPage from './components/ResetPasswordPage';
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
         <Route path="/quiz-created" element={<QuizCreatedPage />} />
         <Route path="/quiz-prof-details" element={<QuizProfDetailsPage />} />
         <Route path="/my-invites" element={<InvitesPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </div>
   );

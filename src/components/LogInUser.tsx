@@ -164,7 +164,49 @@ const LogInUser: React.FC = () => {
                                 <u><b>Register</b></u>
                             </Button>
                         </Typography>
-                        <Button onClick={() => navigate('/forgot-password')} sx={{ display: 'flex', justifyContent: 'center', textTransform: "capitalize", fontSize: '0.8rem' }}>
+                        <Button
+                            onClick={() => {
+                                if (!formData.email.trim()) {
+                                    setSnackbar({
+                                        open: true,
+                                        message: 'Fill in the email field.',
+                                        severity: 'warning'
+                                    });
+                                    return;
+                                }
+                                const handleConfirm = async () => {
+                                    try {
+                                        const accessToken = localStorage.getItem("accessToken");
+                                        if (!accessToken) return null;
+
+                                        const response = await fetch("http://localhost:8090/api/v1/User/forgot-password", {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(formData.email)
+                                        });
+
+                                        if (!response.ok) {
+                                            const errorData = await response.json();
+
+                                            if (errorData?.errors) {
+                                                const allErrors = Object.values(errorData.errors).flat().join(' ');
+                                                throw new Error(allErrors);
+                                            }
+
+                                            throw new Error(errorData.message || 'Forgot password failed');
+                                        }
+                                    } catch (error) {
+                                        console.error('Error during forgot password:', error);
+                                    }
+                                };
+                            }}
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                textTransform: "capitalize",
+                                fontSize: '0.8rem'
+                            }}
+                        >
                             <u><b>Forgot your password?</b></u>
                         </Button>
                     </Stack>
