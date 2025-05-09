@@ -13,106 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { UserInterface } from "../interfaces/UserInterface";
 import profileIcon from '../assets/profile-icon.png';
-
-const middleButtons = {
-    gap: 2,
-    '& .MuiButton-root': {
-        border: 'none !important',
-    },
-    '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-        borderRight: 'none !important',
-    },
-    fontFamily: "'Montserrat', sans-serif !important",
-}
-
-const rightButtons = {
-    gap: 2,
-    background: 'transparent',
-    boxShadow: 'none',
-    '& .MuiButton-root': {
-        borderRadius: '7px',
-        minWidth: 100,
-        boxShadow: 'none',
-        border: 'none',
-    },
-    '& .MuiButtonGroup-grouped:not(:last-of-type)': {
-        border: 'none',
-    },
-    fontFamily: "'Montserrat', sans-serif !important",
-}
-
-const paperStyle = {
-    padding: 2,
-    marginBottom: 1,
-    width: 'full',
-    display: 'flex',
-    justifyContent: 'space-around',
-    height: '60px',
-    alignItems: 'center',
-    fontFamily: "'Montserrat', sans-serif !important",
-}
-
-const TitleStyle = {
-    fontFamily: "'Montserrat', sans-serif !important",
-    fontWeight: 300,
-    textAlign: 'left'
-}
-
-const buttonStyle1 = {
-    color: "white",
-    backgroundColor: "#EBB4D3",
-    borderRadius: 2,
-    textTransform: 'none',
-    fontWeight: 500,
-    fontSize: '1.1rem',
-    boxShadow: 'none',
-    '&:hover': {
-        backgroundColor: '#e39bc8',
-        boxShadow: 'none',
-    },
-    width: '140px',
-    fontFamily: "'Montserrat', sans-serif !important",
-};
-
-const buttonStyle2 = {
-    color: "white",
-    backgroundColor: "#EBB4D3",
-    borderRadius: 2,
-    fontSize: '1rem',
-    '&:hover': {
-        backgroundColor: '#e39bc8',
-    },
-    width: '140px',
-    textTransform: 'capitalize !important',
-    fontFamily: "'Montserrat', sans-serif !important",
-};
-
-const cloudTextStyle = {
-    fontFamily: "Abhaya Libre, serif",
-    fontWeight: '700',
-    textAlign: 'center',
-    fontSize: '1rem',
-    color: 'rgb(106, 62, 167)',
-    marginTop: 13,
-    marginBottom: 2,
-    marginLeft: 5,
-    marginRight: 5,
-}
-
-const boxStyle = {
-    display: 'flex',
-    flexDirection: { xs: 'column', md: 'row' },
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 3,
-    background: '#fff',
-    padding: '20px',
-    marginTop: '100px',
-    marginleft: '50px',
-    marginBottom: '100px',
-    fontFamily: "'Montserrat', sans-serif !important",
-}
-
+import { middleButtons, rightButtons, paperStyle, TitleStyle, buttonStyle1, buttonStyle2, cloudTextStyle, boxStyle } from "../styles/muiElementsStyle";
 
 const GeneralHomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -162,7 +63,29 @@ const GeneralHomePage: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
     const getSectionOneButton = () => {
-        if (!isLoggedIn) {
+        if (isLoggedIn) {
+            if (currentUser?.type === "Student") {
+                return (
+                    <Button
+                        className="section-one-btn"
+                        sx={buttonStyle1}
+                        onClick={() => navigate('/quizes-student')}
+                    >
+                        Solve a quiz!
+                    </Button>
+                );
+            } else if (currentUser?.type === "Professor") {
+                return (
+                    <Button
+                        className="section-one-btn"
+                        sx={buttonStyle1}
+                        onClick={() => navigate('/generate-quiz')}
+                    >
+                        Create a Quiz
+                    </Button>
+                );
+            }
+        } else if (!isLoggedIn) {
             return (
                 <Button
                     className="section-one-btn"
@@ -173,28 +96,6 @@ const GeneralHomePage: React.FC = () => {
                 </Button>
             );
         }
-
-        if (currentUser?.type === "Student") {
-            return (
-                <Button
-                    className="section-one-btn"
-                    sx={buttonStyle1}
-                    onClick={() => navigate('/quizes-student')}
-                >
-                    Solve a quiz!
-                </Button>
-            );
-        }
-
-        return (
-            <Button
-                className="section-one-btn"
-                sx={buttonStyle1}
-                onClick={() => navigate('/create-quiz')}
-            >
-                Create a Quiz
-            </Button>
-        );
     };
 
     const getStartNowButton = () => {
@@ -224,11 +125,29 @@ const GeneralHomePage: React.FC = () => {
             {/* Navigation menu */}
             <Paper elevation={2} sx={paperStyle}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
-                <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
-                    <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizes</Button>
-                    <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
-                </ButtonGroup>
+                {isLoggedIn ? (
+                    currentUser?.type === "Professor" ? (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
+                            <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}>Quizzes</Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                        </ButtonGroup>
+                    ) : (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
+                            <Button onClick={() => navigate('/quizes-student')} sx={{ color: "black" }}>Quizzes</Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                        </ButtonGroup>
+                    )
+                ) : (
+                    <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                        <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
+                        <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}>Quizzes</Button>
+                        <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                    </ButtonGroup>
+                )}
+
+
 
                 {isLoggedIn ? (
                     <Box>
