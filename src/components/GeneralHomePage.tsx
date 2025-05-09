@@ -137,17 +137,16 @@ const GeneralHomePage: React.FC = () => {
                             <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
                             <Button onClick={() => navigate('/quizes-student')} sx={{ color: "black" }}>Quizzes</Button>
                             <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                            <Button onClick={() => navigate('/my-invites')} sx={{ color: "black" }}>Invites</Button>
                         </ButtonGroup>
                     )
                 ) : (
                     <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
                         <Button onClick={() => navigate('/')} sx={{ color: "#AFB3FF" }}><u>Home</u></Button>
-                        <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}>Quizzes</Button>
+                        <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
                         <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
                     </ButtonGroup>
                 )}
-
-
 
                 {isLoggedIn ? (
                     <Box>
@@ -441,11 +440,29 @@ const GeneralHomePage: React.FC = () => {
             {/* Footer */}
             <Paper sx={{ ...paperStyle, marginBottom: 'none', bgcolor: '#AFB3FF' }}>
                 <img src={logo} alt="Logo" style={{ width: 'auto', height: '99%' }} />
-                <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
-                    <Button onClick={() => navigate('/')} sx={{ color: "black" }}><u>Home</u></Button>
-                    <Button onClick={() => navigate('/login')} sx={{ color: "black" }}>Quizzes</Button>
-                    <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
-                </ButtonGroup>
+                {isLoggedIn ? (
+                    currentUser?.type === "Professor" ? (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "black" }}><u>Home</u></Button>
+                            <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}>Quizzes</Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                        </ButtonGroup>
+                    ) : (
+                        <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                            <Button onClick={() => navigate('/')} sx={{ color: "black" }}><u>Home</u></Button>
+                            <Button onClick={() => navigate('/quizes-student')} sx={{ color: "black" }}>Quizzes</Button>
+                            <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                            <Button onClick={() => navigate('/my-invites')} sx={{ color: "black" }}>Invites</Button>
+                        </ButtonGroup>
+                    )
+                ) : (
+                    <ButtonGroup variant="text" aria-label="Basic button group" sx={middleButtons}>
+                        <Button onClick={() => navigate('/')} sx={{ color: "black" }}><u>Home</u></Button>
+                        <Button onClick={() => navigate('/quizes-teacher')} sx={{ color: "black" }}>Quizzes</Button>
+                        <Button onClick={() => navigate('/help')} sx={{ color: "black" }}>Help</Button>
+                    </ButtonGroup>
+                )}
+
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <IconButton sx={{ color: "#656ED3" }}>
                         <Facebook />

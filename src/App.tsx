@@ -15,6 +15,8 @@ import QuizFinishedPage from './components/QuizFinishedPage';
 import QuizCreatedPage from './components/QuizCreatedPage';
 import QuizProfDetailsPage from './components/QuizProfDetailsPage';
 import QuizesStudentPage from './components/QuizesStudentPage';
+import InvitesPage from './components/InvitesPage';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/quiz-finished" element={<QuizFinishedPage />} />
         <Route path="/quiz-created" element={<QuizCreatedPage />} />
         <Route path="/quiz-prof-details" element={<QuizProfDetailsPage />} />
+        <Route path="/my-invites" element={<InvitesPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Routes>
     </div>
   );

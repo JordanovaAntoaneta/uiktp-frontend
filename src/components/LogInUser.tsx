@@ -164,7 +164,7 @@ const LogInUser: React.FC = () => {
                                 <u><b>Register</b></u>
                             </Button>
                         </Typography>
-                        <Button sx={{ display: 'flex', justifyContent: 'center', textTransform: "capitalize", fontSize: '0.8rem' }}>
+                        <Button onClick={() => navigate('/forgot-password')} sx={{ display: 'flex', justifyContent: 'center', textTransform: "capitalize", fontSize: '0.8rem' }}>
                             <u><b>Forgot your password?</b></u>
                         </Button>
                     </Stack>
