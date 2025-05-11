@@ -16,6 +16,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { UserInterface } from "../interfaces/UserInterface";
 import { AllUsersInterface } from "../interfaces/AllUsersInterface";
+import { linkBase } from "../linkBase";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -110,7 +111,7 @@ const QuizProfDetailsPage: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,

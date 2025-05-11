@@ -11,6 +11,7 @@ import computer from "../assets/QuizStudentDetailsPage/computer.png";
 import pdf from "../assets/QuizStudentDetailsPage/pdf.png";
 import { QuizInterface } from "../interfaces/QuizInterface";
 import { UserInterface } from "../interfaces/UserInterface";
+import { linkBase } from "../linkBase";
 
 const paperStyle = {
     padding: 2,
@@ -91,7 +92,7 @@ const QuizStudentDetailsPage: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,

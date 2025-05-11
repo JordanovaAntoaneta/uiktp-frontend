@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import RegisterImg from "../assets/RegisterUser/register-image.png";
 import "../styles/RegisterUser.css";
+import { linkBase } from "../linkBase";
 
 const TitleStyle = {
     fontFamily: "Abhaya Libre, serif",
@@ -76,7 +77,7 @@ const RegisterUser: React.FC = () => {
         try {
             setLoading(true);
 
-            const response = await fetch('http://localhost:8090/api/v1/User', {
+            const response = await fetch(`${linkBase}/User`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

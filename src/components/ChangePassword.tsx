@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserInterface } from "../interfaces/UserInterface";
 import { Button, Box, Typography, Paper, TextField, Snackbar, Alert } from "@mui/material";
+import { linkBase } from "../linkBase";
 
 const ChangePassword: React.FC = () => {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ChangePassword: React.FC = () => {
             const token = localStorage.getItem("accessToken");
             if (!token) return;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -70,7 +71,7 @@ const ChangePassword: React.FC = () => {
             const token = localStorage.getItem("accessToken");
             if (!token) throw new Error("Not authenticated.");
 
-            const response = await fetch("http://localhost:8090/api/v1/User/change-password", {
+            const response = await fetch(`${linkBase}/User/change-password`, {
                 method: "PUT",
                 headers: {
                     "Authorization": `Bearer ${token}`,

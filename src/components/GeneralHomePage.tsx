@@ -14,6 +14,7 @@ import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import { UserInterface } from "../interfaces/UserInterface";
 import profileIcon from '../assets/profile-icon.png';
 import { middleButtons, rightButtons, paperStyle, TitleStyle, buttonStyle1, buttonStyle2, cloudTextStyle, boxStyle } from "../styles/muiElementsStyle";
+import { linkBase } from "../linkBase";
 
 const GeneralHomePage: React.FC = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const GeneralHomePage: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,

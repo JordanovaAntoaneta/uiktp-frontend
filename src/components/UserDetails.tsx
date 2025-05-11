@@ -7,6 +7,7 @@ import profileIcon from '../assets/profile-icon.png';
 import { middleButtons, rightButtons, paperStyle, TitleStyle, buttonStyle1, buttonStyle2, cloudTextStyle, boxStyle } from "../styles/muiElementsStyle";
 import { Box, Button, ButtonGroup, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 import computer from '../assets/User details/computer.png';
+import { linkBase } from "../linkBase";
 
 const UserDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const UserDetails: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,

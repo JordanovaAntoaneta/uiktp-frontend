@@ -8,6 +8,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import { useNavigate } from 'react-router-dom';
 import LogInImg from "../assets/LogInUser/login-image.png";
 import "../styles/loginUser.css";
+import { linkBase } from "../linkBase";
 
 const TitleStyle = {
     fontFamily: "Abhaya Libre, serif",
@@ -59,7 +60,7 @@ const LogInUser: React.FC = () => {
         try {
             setLoading(true);
 
-            const response = await fetch('http://localhost:8090/api/v1/Authenticate/login', {
+            const response = await fetch(`${linkBase}/Authenticate/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -179,7 +180,7 @@ const LogInUser: React.FC = () => {
                                     const accessToken = localStorage.getItem("accessToken");
                                     if (!accessToken) return;
 
-                                    const response = await fetch("http://localhost:8090/api/v1/User/forgot-password", {
+                                    const response = await fetch(`${linkBase}/User/forgot-password`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(formData.email)

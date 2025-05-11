@@ -9,7 +9,7 @@ import illustration from "../assets/CreatedQuizPage/illustration.png";
 import glass from "../assets/CreatedQuizPage/magnifying glass.png";
 import { useNavigate } from "react-router-dom";
 import { AllUsersInterface } from "../interfaces/AllUsersInterface";
-import { CreateQuizInterface } from "../interfaces/CreateQuizInterface";
+import { linkBase } from "../linkBase";
 
 const Input = styled('input')({ display: 'none' });
 
@@ -21,13 +21,44 @@ const CreatedQuizPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [numberOfQuestions, setNumberOfQuestions] = useState<string>("");
+  const [newQuizQuestions, setNewQuizQuestions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) return null;
+
+        const response = await fetch(`${linkBase}/User/me`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+    getCurrentUser();
+  }, []);
+
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('accessToken');
         if (!token) throw new Error('No access token found');
-        const response = await fetch('http://localhost:8090/api/v1/User/all', {
+        const response = await fetch(`${linkBase}/User/all`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -44,8 +75,6 @@ const CreatedQuizPage: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const isFormValid = topic.trim() !== '' && file !== null;
-
   const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
@@ -57,6 +86,8 @@ const CreatedQuizPage: React.FC = () => {
     }
     setFile(selectedFile);
   }, []);
+
+  const isFormValid = topic.trim() !== '' && file !== null && numberOfQuestions !== "" && Number(numberOfQuestions) > 0;
 
   const handleNext = useCallback(async () => {
     const token = localStorage.getItem('accessToken');
@@ -72,12 +103,25 @@ const CreatedQuizPage: React.FC = () => {
       return;
     }
 
+    if (!currentUser || !currentUser.id) {
+      setSnackbarMessage("User not loaded yet.");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    if (!numberOfQuestions || isNaN(Number(numberOfQuestions)) || Number(numberOfQuestions) <= 0) {
+      setSnackbarMessage("Please enter a valid number of questions.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("Name", topic);
+    formData.append("UserCreatorId", currentUser.id.toString());
     formData.append("File", file);
 
     try {
-      const response = await fetch('http://localhost:8090/api/v1/Quiz', {
+      const response = await fetch(`${linkBase}/Quiz`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -91,12 +135,58 @@ const CreatedQuizPage: React.FC = () => {
         setSnackbarOpen(true);
         return;
       }
-      // navigate('/questions', { state: { quizId: createdQuiz.id } });
+
+      const createdQuiz = await response.json();
+
+      const generateQuestionsResponse = await fetch(`${linkBase}/Quiz/generate-questions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          numberOfQuestions: Number(numberOfQuestions),
+          subject: topic,
+          quizId: createdQuiz.id
+        }),
+      });
+
+      if (!generateQuestionsResponse.ok) {
+        const errorText = await generateQuestionsResponse.text();
+        setSnackbarMessage("Failed to generate questions: " + errorText);
+        setSnackbarOpen(true);
+        return;
+      }
+
+      const getQuestionsResponse = await fetch(
+        `${linkBase}/Question/by-quizz?quizId=${createdQuiz.id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!getQuestionsResponse.ok) {
+        const errorText = await getQuestionsResponse.text();
+        setSnackbarMessage("Failed to fetch questions: " + errorText);
+        setSnackbarOpen(true);
+        return;
+      }
+
+      const questions = await getQuestionsResponse.json();
+      setNewQuizQuestions(questions);
+      console.log("Questions fetched:", questions);
+
+      navigate('/questions', { state: { quizId: createdQuiz.id, questions } });
+
     } catch (error) {
-      setSnackbarMessage("Error creating quiz");
+      setSnackbarMessage("Error creating quiz or generating/fetching questions");
       setSnackbarOpen(true);
     }
-  }, [topic, file]);
+  }, [topic, file, currentUser, numberOfQuestions, navigate]);
 
   return (
     <Box sx={{
@@ -131,6 +221,17 @@ const CreatedQuizPage: React.FC = () => {
               required
               helperText={!topic.trim() && "Topic is required"}
               error={!topic.trim()}
+            />
+            <TextField
+              fullWidth
+              label="Number of questions"
+              variant="outlined"
+              margin="normal"
+              value={numberOfQuestions}
+              onChange={e => setNumberOfQuestions(e.target.value.replace(/[^0-9]/g, ""))}
+              required
+              type="number"
+              inputProps={{ min: 1 }}
             />
             <label htmlFor="upload-pdf">
               <Input id="upload-pdf" type="file" accept="application/pdf" onChange={handleFileChange} />

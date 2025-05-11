@@ -8,6 +8,7 @@ import { Box, Button, ButtonGroup, Card, CardContent, IconButton, Paper, Typogra
 import cover from '../assets/InvitesPage/cover.png';
 import { Root } from "../interfaces/MyInvitesInterface";
 import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import { linkBase } from "../linkBase";
 
 const InvitesPage = () => {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ const InvitesPage = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
@@ -45,7 +46,7 @@ const InvitesPage = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch(`http://localhost:8090/api/v1/Quiz/my-invites?userId=${userId}`, {
+            const response = await fetch(`${linkBase}/Quiz/my-invites?userId=${userId}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
@@ -95,7 +96,7 @@ const InvitesPage = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/Quiz/agree-participant", {
+            const response = await fetch(`${linkBase}/Quiz/agree-participant`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

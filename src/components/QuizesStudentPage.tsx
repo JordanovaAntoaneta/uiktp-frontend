@@ -8,6 +8,7 @@ import { Facebook, Instagram, Twitter } from "@mui/icons-material";
 import loginImg from "../assets/LogInUser/login-image.png";
 import { UserInterface } from "../interfaces/UserInterface";
 import { QuizInterface } from "../interfaces/QuizInterface";
+import { linkBase } from "../linkBase";
 
 const middleButtons = {
     gap: 2,
@@ -96,7 +97,7 @@ const QuizesStudentPage: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch("http://localhost:8090/api/v1/User/me", {
+            const response = await fetch(`${linkBase}/User/me`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
@@ -122,7 +123,7 @@ const QuizesStudentPage: React.FC = () => {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
-            const response = await fetch(`http://localhost:8090/api/v1/Quiz/visable-to-me?userid=${userId}`, {
+            const response = await fetch(`${linkBase}/Quiz/visable-to-me?userid=${userId}`, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
