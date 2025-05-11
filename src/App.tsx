@@ -8,7 +8,6 @@ import LogInUser from './components/LogInUser';
 import GeneralHomePage from './components/GeneralHomePage';
 import HelpPage from './components/HelpPage';
 import QuizesProfPage from './components/QuizesProfPage';
-import GenerateQuizPage from './components/GenerateQuizPage';
 import QuizStudentDetailsPage from './components/QuizStudentDetailsPage';
 import QuizPreviewPage from './components/QuizPreviewPage';
 import QuizFinishedPage from './components/QuizFinishedPage';
@@ -19,6 +18,8 @@ import InvitesPage from './components/InvitesPage';
 import ResetPasswordPage from './components/ResetPasswordPage';
 import UserDetails from './components/UserDetails';
 import ChangePassword from './components/ChangePassword';
+import CreatedQuizPage from './components/CreatedQuizPage';
+import QusetionsProfPage from './components/QuestionsProfPage';
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
         <Route path="/help" element={<HelpPage />} />
         <Route path="/quizes-teacher" element={<QuizesProfPage />} />
         <Route path="/quizes-student" element={<QuizesStudentPage />} />
-        <Route path="/generate-quiz" element={<GenerateQuizPage />} />
+        
         <Route path="/quiz-student-details" element={<QuizStudentDetailsPage />} />
         <Route path="/quiz-preview" element={<QuizPreviewPage />} />
         <Route path="/quiz-finished" element={<QuizFinishedPage />} />
@@ -41,6 +42,8 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path='/user-details' element={<UserDetails />} />
         <Route path='/change-password' element={<ChangePassword />} />
+        <Route path='/create-quiz' element={<CreatedQuizPage />} />
+        <Route path='/questions' element={<QusetionsProfPage />} />
       </Routes>
     </div>
   );

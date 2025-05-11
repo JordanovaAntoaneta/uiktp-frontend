@@ -11,6 +11,7 @@ import computer from "../assets/QuizStudentDetailsPage/computer.png";
 import pdf from "../assets/QuizStudentDetailsPage/pdf.png";
 
 
+
 const paperStyle = {
     padding: 2,
     marginBottom: 0,
@@ -161,7 +162,9 @@ const QuizStudentDetailsPage: React.FC = () => {
                     <Typography variant="h4" sx={{fontSize: '1rem', marginBottom: 2, textAlign: 'left', fontWeight: 'bold', fontFamily: "'Montserrat', sans-serif !important"}}>
                         Click 'Start Quiz' to begin. Answer all questions to the best of your ability. Good luck!
                     </Typography>
-                    <Button variant="contained" sx={{ backgroundColor: '#6C63FF', textTransform: 'none', alignSelf: 'flex-start' }}>
+                    <Button variant="contained" 
+                            sx={{ backgroundColor: '#6C63FF', textTransform: 'none', alignSelf: 'flex-start' }}
+                            onClick={() => navigate('/quiz-preview')}>
                         Start Quiz
                     </Button>
                 </Box>

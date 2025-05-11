@@ -2,9 +2,11 @@ import React from "react";
 import { Box, Button} from "@mui/material";
 import "../styles/QuizStudentDetailsPage.css"
 import finished from "../assets/QuizFinished/finished.png";
-
+import { useNavigate } from "react-router-dom";
 
 const QuizFinishedPage = () => {
+  const navigate = useNavigate();
+
     return (
       <Box
         sx={{
@@ -78,6 +80,7 @@ const QuizFinishedPage = () => {
             py: 1,
             fontWeight: 'bold',
           }}
+          onClick={() => navigate('/quiz-student-details')}
         >
           Back
         </Button>

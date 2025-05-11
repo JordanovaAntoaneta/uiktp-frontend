@@ -1,9 +1,15 @@
 import { Box, Button} from "@mui/material";
 import "../styles/QuizStudentDetailsPage.css"
 import created from "../assets/QuizCreated/created.png";
+import { Link } from 'react-router-dom';
+
+//za link na kopchinja
+import { useNavigate } from "react-router-dom";
+
 
 
 const QuizFinishedPage = () => {
+  const navigate = useNavigate();
     return (
       <Box
         sx={{
@@ -64,7 +70,8 @@ const QuizFinishedPage = () => {
         </Box>
   
         {/* Right-aligned Back button */}
-        <Button
+        
+        <Button onClick={() => navigate('/quiz-prof-details')}
           variant="contained"
           sx={{
             position: 'absolute', 
@@ -80,6 +87,7 @@ const QuizFinishedPage = () => {
         >
           Back
         </Button>
+        
       </Box>
     );
   };
