@@ -34,7 +34,7 @@ const ResetPasswordPage: React.FC = () => {
                     textAlign: 'center',
                 }}
             >
-                <Typography variant="h5" fontWeight="bold" mb={4}>
+                <Typography variant="h5" fontWeight="bold" mb={4} sx={{ fontFamily: "'Montserrat', sans-serif !important" }}>
                     Type in your new password!
                 </Typography>
 
@@ -68,6 +68,7 @@ const ResetPasswordPage: React.FC = () => {
                             '&:hover': {
                                 backgroundColor: '#5a5ecf',
                             },
+                            fontFamily: "'Montserrat', sans-serif !important"
                         }}
                     // onClick={}
                     >
@@ -82,6 +83,7 @@ const ResetPasswordPage: React.FC = () => {
                             '&:hover': {
                                 backgroundColor: '#5a5ecf',
                             },
+                            fontFamily: "'Montserrat', sans-serif !important"
                         }}
                         onClick={handleCancel}
                     >

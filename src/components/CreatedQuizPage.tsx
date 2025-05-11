@@ -65,6 +65,7 @@ const CreatedQuizPage: React.FC = () => {
       setSnackbarOpen(true);
       return;
     }
+
     if (!file) {
       setSnackbarMessage("Please upload a PDF file before proceeding.");
       setSnackbarOpen(true);
@@ -90,7 +91,6 @@ const CreatedQuizPage: React.FC = () => {
         setSnackbarOpen(true);
         return;
       }
-      // const createdQuiz = await response.json();
       // navigate('/questions', { state: { quizId: createdQuiz.id } });
     } catch (error) {
       setSnackbarMessage("Error creating quiz");

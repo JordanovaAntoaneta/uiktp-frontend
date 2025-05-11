@@ -465,13 +465,13 @@ const GeneralHomePage: React.FC = () => {
                 )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <IconButton sx={{ color: "#656ED3" }}>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://www.facebook.com/profile.php?id=61554727830080">
                         <Facebook />
                     </IconButton>
-                    <IconButton sx={{ color: "#656ED3" }}>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://www.instagram.com/edu_wiz_mk/">
                         <Instagram />
                     </IconButton>
-                    <IconButton sx={{ color: "#656ED3" }}>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://x.com/edu_wiz_mk">
                         <Twitter />
                     </IconButton>
                 </Box>

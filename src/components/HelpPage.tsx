@@ -299,7 +299,7 @@ const HelpPage: React.FC = () => {
                     }}>
                         End-to-end payments and financial management in a single solution. Meet the right platform to help realize.
                     </Typography>
-                    <a href="mailto:support@eduwiz.com" style={{ textDecoration: 'none' }}>
+                    <a href="mailto:vinariimk00@gmail.com" style={{ textDecoration: 'none' }}>
                         <Button
                             sx={{
                                 ...buttonStyle,
@@ -344,13 +344,13 @@ const HelpPage: React.FC = () => {
                 )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <IconButton sx={{ color: "#656ED3" }}>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://www.facebook.com/profile.php?id=61554727830080">
                         <Facebook />
                     </IconButton>
-                    <IconButton>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://www.instagram.com/edu_wiz_mk/">
                         <Instagram />
                     </IconButton>
-                    <IconButton sx={{ color: "#656ED3" }}>
+                    <IconButton sx={{ color: "#656ED3" }} href="https://x.com/edu_wiz_mk">
                         <Twitter />
                     </IconButton>
                 </Box>
