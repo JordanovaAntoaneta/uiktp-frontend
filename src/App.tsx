@@ -32,7 +32,7 @@ function App() {
         <Route path="/help" element={<HelpPage />} />
         <Route path="/quizes-teacher" element={<QuizesProfPage />} />
         <Route path="/quizes-student" element={<QuizesStudentPage />} />
-        
+
         <Route path="/quiz-student-details" element={<QuizStudentDetailsPage />} />
         <Route path="/quiz-preview" element={<QuizPreviewPage />} />
         <Route path="/quiz-finished" element={<QuizFinishedPage />} />
@@ -42,7 +42,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path='/user-details' element={<UserDetails />} />
         <Route path='/change-password' element={<ChangePassword />} />
-        <Route path='/create-quiz' element={<CreatedQuizPage />} />
+        <Route path='/generate-quiz' element={<CreatedQuizPage />} />
         <Route path='/questions' element={<QusetionsProfPage />} />
       </Routes>
     </div>
