@@ -52,29 +52,6 @@ const CreatedQuizPage: React.FC = () => {
     getCurrentUser();
   }, []);
 
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        if (!token) throw new Error('No access token found');
-        const response = await fetch(`${linkBase}/User/all`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!response.ok) throw new Error('Failed to fetch users');
-        const data: AllUsersInterface[] = await response.json();
-        setStudentUsers(data.filter(user => user.type === 'Student'));
-      } catch (error) {
-        setSnackbarMessage((error as Error).message || "Error fetching users");
-        setSnackbarOpen(true);
-      }
-    };
-    fetchUsers();
-  }, []);
-
   const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;

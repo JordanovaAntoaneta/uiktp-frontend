@@ -202,9 +202,6 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
-                                onChange={(e) =>
-                                    setFormValues((prev) => prev ? { ...prev, firstName: e.target.value } : null)
-                                }
                             />
                             <TextField
                                 label="Last name:"
@@ -215,9 +212,6 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
-                                onChange={(e) =>
-                                    setFormValues((prev) => prev ? { ...prev, lastName: e.target.value } : null)
-                                }
                             />
                             <TextField
                                 label="Email:"
@@ -229,9 +223,6 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
-                                onChange={(e) =>
-                                    setFormValues((prev) => prev ? { ...prev, email: e.target.value } : null)
-                                }
                             />
                             <TextField
                                 label="Phone Number:"
@@ -242,9 +233,6 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
-                                onChange={(e) =>
-                                    setFormValues((prev) => prev ? { ...prev, phoneNumber: e.target.value } : null)
-                                }
                             />
                             <ButtonGroup sx={{ ...middleButtons, width: '100%' }}>
                                 <Button
@@ -295,6 +283,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, firstName: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Last name:"
@@ -304,6 +295,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, lastName: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Email:"
@@ -314,6 +308,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, email: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Phone Number:"
@@ -323,6 +320,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, phoneNumber: e.target.value } : null)
+                                }
                             />
                             <ButtonGroup sx={{ ...middleButtons, width: '100%' }}>
                                 <Button
