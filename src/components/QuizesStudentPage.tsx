@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/GeneralHomePage/logo.png";
 import profileIcon from "../assets/profile-icon.png";
 import "../styles/QuizesProf.css"
-import { Facebook, Instagram, Twitter } from "@mui/icons-material";
+import { Facebook, Instagram, Twitter, Delete as DeleteIcon } from "@mui/icons-material";
 import loginImg from "../assets/LogInUser/login-image.png";
 import { UserInterface } from "../interfaces/UserInterface";
 import { QuizInterface } from "../interfaces/QuizInterface";
@@ -169,6 +169,39 @@ const QuizesStudentPage: React.FC = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
+    const handleCount = async (quizId: number): Promise<number> => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.error('No access token found');
+            return 0;
+        }
+
+        try {
+            const response = await fetch(
+                `${linkBase}/Question/by-quizz?quizId=${quizId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const questions = await response.json();
+            return questions.length;
+
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+            return 0;
+        }
+    };
+
+
     return (
         <div style={{ minHeight: '100vh', height: 'fit-content' }}>
             {/* Navigation menu */}
@@ -230,22 +263,88 @@ const QuizesStudentPage: React.FC = () => {
                 My Quizzes
             </Typography>
 
-            <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={3} sx={{ marginBottom: '100px', marginLeft: '5%', marginRight: '5%' }}>
+            <Box
+                display="grid"
+                gridTemplateColumns="repeat(3, 1fr)"
+                gap={3}
+                sx={{ marginBottom: '100px', marginLeft: '5%', marginRight: '5%' }}
+            >
                 {quizzes.map((quiz, index) => (
-                    <Button onClick={() => navigate(`/quiz-student-details`, { state: { quizId: quiz.id } })} key={quiz.id} sx={{ padding: 0 }}>
-                        <Card elevation={3} sx={{ '.css-1lt5qva-MuiCardContent-root': { padding: '0' } }}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div" sx={{ backgroundColor: colors[index % colors.length], width: '100%', padding: 1, color: 'black' }}>
-                                        {quiz.title}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ color: 'text.secondary', padding: 1 }}>
-                                        Date created: Date created: {formatDate(quiz.createdAt)}
-                                    </Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Button>
+                    <Card
+                        key={quiz.id}
+                        elevation={3}
+                        sx={{
+                            width: 400,
+                            height: 300,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            margin: '0 auto',
+                            background: '#fff',
+                            borderRadius: 2,
+                        }}
+                    >
+                        <CardActionArea
+                            onClick={() => navigate(`/quiz-prof-details`, { state: { quizId: quiz.id } })}
+                            sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
+                        >
+                            <Box
+                                sx={{
+                                    backgroundColor: colors[index % colors.length],
+                                    width: '100%',
+                                    height: '100%',
+                                    paddingY: 3,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderTopLeftRadius: 8,
+                                    borderTopRightRadius: 8,
+                                }}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    component="div"
+                                    sx={{
+                                        fontWeight: 700,
+                                        color: 'white',
+                                        fontSize: '1.5rem',
+                                        letterSpacing: 1,
+                                        textAlign: 'center',
+                                        textShadow: '0 1px 4px rgba(0,0,0,0.10)',
+                                    }}
+                                >
+                                    {quiz.title}
+                                </Typography>
+                            </Box>
+                        </CardActionArea>
+                        <Box
+                            sx={{
+                                background: '#fff',
+                                borderBottomLeftRadius: 8,
+                                borderBottomRightRadius: 8,
+                                borderTop: '1px solid #eee',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                paddingX: 2,
+                                paddingY: 1,
+                            }}
+                        >
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: '#111',
+                                    fontWeight: 500,
+                                    fontSize: '1.2rem',
+                                }}
+                            >
+                                Date created: {formatDate(quiz.createdAt)}
+                            </Typography>
+                            <Typography>
+                                {handleCount(quiz.id)}
+                            </Typography>
+                        </Box>
+                    </Card>
                 ))}
             </Box>
 

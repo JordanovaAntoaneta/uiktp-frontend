@@ -61,30 +61,38 @@ const UserDetails: React.FC = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
     const editDetails = async () => {
-        //     try {
-        //         const accessToken = localStorage.getItem("accessToken");
-        //         if (!accessToken) return null;
+        if (!formValues) return;
 
-        //         const response = await fetch("http://localhost:8090/api/v1/User/me", {
-        //             method: "GET",
-        //             headers: {
-        //                 "Authorization": `Bearer ${accessToken}`,
-        //                 "Content-Type": "application/json"
-        //             }
-        //         });
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) throw new Error("User is not authenticated");
 
-        //         if (!response.ok) {
-        //             throw new Error(`Error: ${response.status}`);
-        //         }
+            const response = await fetch(`${linkBase}/User`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    firstName: formValues.firstName,
+                    lastName: formValues.lastName,
+                    email: formValues.email,
+                    phoneNumber: formValues.phoneNumber
+                })
+            });
 
-        //         const userData = await response.json();
-        //         setCurrentUser(userData);
-        //         return userData;
-        //     } catch (error) {
-        //         console.error("Failed to fetch user data:", error);
-        //         return null;
-        //     }
+            if (!response.ok) {
+                throw new Error(`Failed to update user: ${response.status}`);
+            }
+
+            const updatedUser = await response.json();
+            setCurrentUser(updatedUser);
+            setEditMode(false);
+        } catch (error) {
+            console.error("Error updating user details:", error);
+        }
     };
+
 
     return (
         <Box sx={{ minHeight: '100vh' }}>
@@ -194,6 +202,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, firstName: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Last name:"
@@ -204,6 +215,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, lastName: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Email:"
@@ -215,6 +229,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, email: e.target.value } : null)
+                                }
                             />
                             <TextField
                                 label="Phone Number:"
@@ -225,6 +242,9 @@ const UserDetails: React.FC = () => {
                                 size="small"
                                 InputLabelProps={{ shrink: true }}
                                 sx={{ backgroundColor: 'white' }}
+                                onChange={(e) =>
+                                    setFormValues((prev) => prev ? { ...prev, phoneNumber: e.target.value } : null)
+                                }
                             />
                             <ButtonGroup sx={{ ...middleButtons, width: '100%' }}>
                                 <Button
