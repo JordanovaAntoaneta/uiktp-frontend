@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserInterface } from "../interfaces/UserInterface";
+import { QuizInterface } from "../interfaces/QuizInterface";
 import profileIcon from '../assets/profile-icon.png';
 import logo from '../assets/GeneralHomePage/logo.png';
 import { middleButtons, rightButtons, paperStyle, TitleStyle, buttonStyle1, buttonStyle2, cloudTextStyle, boxStyle } from "../styles/muiElementsStyle";
@@ -14,6 +16,8 @@ const InvitesPage = () => {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
     const [invites, setInvites] = useState<Root[]>([]);
+    const [quizzes, setQuizzes] = useState<QuizInterface[]>([]);
+const [selectedQuizzes, setSelectedQuizzes] =  useState<QuizInterface[]>([]);
 
     const getCurrentUser = async () => {
         try {
@@ -72,11 +76,50 @@ const InvitesPage = () => {
             const user: UserInterface = await getCurrentUser();
             if (user) {
                 await getInvites(user.id);
+                await getQuizzes();
             }
         };
 
         fetchUserAndQuizzes();
     }, []);
+
+    const getQuizzes = async () => {
+              try {
+                  const accessToken = localStorage.getItem("accessToken");
+                  if (!accessToken) return null;
+      
+                  const response = await fetch(`${linkBase}/Quiz/all-quizzes`, {
+                      method: "GET",
+                      headers: {
+                          "Authorization": `Bearer ${accessToken}`,
+                          "Content-Type": "application/json"
+                      }
+                  });
+      
+                  if (!response.ok) {
+                      throw new Error(`Error: ${response.status}`);
+                  }
+      
+                  const quizzes = await response.json();
+                  setQuizzes(quizzes);
+                  return quizzes;
+              } catch (error) {
+                  console.error("Failed to fetch quizzes:", error);
+                  return null;
+              }
+          };
+         useEffect(() => {
+                    if (!invites || !quizzes) return;
+
+                    const selectedQuizzes = quizzes.filter(quiz =>
+                        invites.some(invite => invite.quizId === quiz.id)
+                    );
+                    setSelectedQuizzes(selectedQuizzes);
+                    console.log("Selected quizzes for invites:", selectedQuizzes);
+                }, [invites, quizzes]);
+
+          
+          
 
     const handleLogout = () => {
         localStorage.removeItem("accessToken");
@@ -87,12 +130,11 @@ const InvitesPage = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken"));
 
-    const deleteInvite = (id: number) => {
-        setInvites(invites.filter((invite) => invite.id !== id));
-    }
+   
+    
 
-    const acceptInvite = async (userId: number, quizId: number) => {
-        try {
+const acceptInvite = async (userId: number, quizId: number) => {
+  try {
             const accessToken = localStorage.getItem("accessToken");
             if (!accessToken) return null;
 
@@ -108,18 +150,30 @@ const InvitesPage = () => {
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status}`);
-            }
 
-            const updatedInvites = await response.json();
-            setInvites(updatedInvites);
-            return updatedInvites;
-        } catch (error) {
-            console.error("Failed to accept invite:", error);
-            return null;
-        }
-    };
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Прочитај го одговорот како текст, не како JSON
+    const resultText = await response.text();
+    console.log('Accept invite response:', resultText);  // Треба да испише "Participant agreed."
+
+    // Отстрани ја прифатената покана од локалниот state за да ја тргнеш картичката
+    setInvites((prev) =>
+      prev.filter((invite) => !(invite.userId === userId && invite.quizId === quizId))
+    );
+    
+  } catch (error) {
+    console.error('Network error:', error);
+  }
+};
+
+const deleteInvite = (inviteId: number) => {
+  // Едноставно филтрирај ја поканата од локалната листа
+  setInvites((prev) => prev.filter((invite) => invite.id !== inviteId));
+};
+
     return (
         <div className="invites-page">
 
@@ -186,41 +240,55 @@ const InvitesPage = () => {
                     marginBottom: '50px',
                 }}
             >
-                {invites?.map((invite) => (
-                    <Card
-                        sx={{
-                            display: 'flex',
-                            borderRadius: '20px',
-                            boxShadow: 3,
-                            overflow: 'hidden',
-                            bgcolor: '#f0f3ff',
-                            width: 600,
-                            height: 160,
-                        }}
+                {invites?.map((invite) => {
+             const quiz = selectedQuizzes.find(q => q.id === invite.quizId);
+console.log(quiz?.title)
+            return (
+            <Card
+                key={invite.id}
+                 sx={{
+                display: 'flex',
+                borderRadius: '20px',
+                boxShadow: 3,
+                overflow: 'hidden',
+                bgcolor: '#f0f3ff',
+                width: 600,
+                height: 160,
+                }}
+             >
+            {/* Purple vertical bar */}
+            <Box sx={{ width: 30, bgcolor: '#656ED3', height: '100%' }} />
+
+            {/* Content */}
+            <CardContent sx={{ flex: 1 }}>
+                <Typography
+                    variant="body1"
+                    sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500, textAlign: 'left', paddingBottom: '20px' }}
+                >
+                    {quiz?.title} {/* fallback ако нема */}
+                </Typography>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+                    <Button
+                        variant="contained"
+                        sx={{ bgcolor: '#656ED3', borderRadius: '20px', px: 3 }}
+                        onClick={() => currentUser?.id && acceptInvite(currentUser.id, invite.quizId)}
                     >
-                        {/* Purple vertical bar */}
-                        <Box sx={{ width: 30, bgcolor: '#656ED3', height: '100%' }} />
+                        Accept
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ bgcolor: '#656ED3', borderRadius: '20px', px: 3 }}
+                        onClick={() => deleteInvite(invite.id)}
+                    >
+                        Deny
+                    </Button>
+                </Box>
+            </CardContent>
+        </Card>
+    );
+})}
 
-                        {/* Content */}
-                        <CardContent sx={{ flex: 1 }}>
-                            <Typography
-                                variant="body1"
-                                sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500, textAlign: 'left', paddingBottom: '20px' }}
-                            >
-                                {invite.quiz.title}
-                            </Typography>
-
-                            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
-                                <Button variant="contained" sx={{ bgcolor: '#656ED3', borderRadius: '20px', px: 3 }} onClick={() => currentUser?.id && acceptInvite(currentUser.id, invite.quiz.id)}>
-                                    Accept
-                                </Button>
-                                <Button variant="contained" sx={{ bgcolor: '#656ED3', borderRadius: '20px', px: 3 }} onClick={() => deleteInvite(invite.id)}>
-                                    Deny
-                                </Button>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                ))}
             </Box>
 
             {/* Footer */}
