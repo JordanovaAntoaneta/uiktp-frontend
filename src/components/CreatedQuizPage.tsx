@@ -10,6 +10,7 @@ import glass from "../assets/CreatedQuizPage/magnifying glass.png";
 import { useNavigate } from "react-router-dom";
 import { AllUsersInterface } from "../interfaces/AllUsersInterface";
 import { linkBase } from "../linkBase";
+import LinearProgress from '@mui/material/LinearProgress';
 
 const Input = styled('input')({ display: 'none' });
 
@@ -24,6 +25,8 @@ const CreatedQuizPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [numberOfQuestions, setNumberOfQuestions] = useState<string>("");
   const [newQuizQuestions, setNewQuizQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -67,6 +70,9 @@ const CreatedQuizPage: React.FC = () => {
   const isFormValid = topic.trim() !== '' && file !== null && numberOfQuestions !== "" && Number(numberOfQuestions) > 0;
 
   const handleNext = useCallback(async () => {
+    if(loading) return;
+    setLoading(true);
+    
     const token = localStorage.getItem('accessToken');
     if (!token) {
       setSnackbarMessage("No access token found");
@@ -132,6 +138,7 @@ const CreatedQuizPage: React.FC = () => {
         const errorText = await generateQuestionsResponse.text();
         setSnackbarMessage("Failed to generate questions: " + errorText);
         setSnackbarOpen(true);
+        setLoading(false);
         return;
       }
 
@@ -150,6 +157,7 @@ const CreatedQuizPage: React.FC = () => {
         const errorText = await getQuestionsResponse.text();
         setSnackbarMessage("Failed to fetch questions: " + errorText);
         setSnackbarOpen(true);
+        setLoading(false);
         return;
       }
 
@@ -157,19 +165,26 @@ const CreatedQuizPage: React.FC = () => {
       setNewQuizQuestions(questions);
       console.log("Questions fetched:", questions);
 
-      navigate('/questions', { state: { quizId: createdQuiz.id, questions } });
+      navigate('/questions', { state: { quizId: createdQuiz.id, questions, subject: topic } });
 
     } catch (error) {
       setSnackbarMessage("Error creating quiz or generating/fetching questions");
       setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
     }
-  }, [topic, file, currentUser, numberOfQuestions, navigate]);
+  }, [topic, file, currentUser, numberOfQuestions, navigate, loading]);
 
   return (
     <Box sx={{
       minHeight: "100vh", width: "100%", bgcolor: "#f0f2ff",
       display: "flex", justifyContent: "center", alignItems: "center", py: 6,
     }}>
+      {loading && (
+        <Box sx={{ width: '100%', position: 'fixed', top: 0, left: 0, zIndex: 1301 }}>
+          <LinearProgress />
+        </Box>
+      )}
       <Box sx={{
         width: 1000, bgcolor: "#fff", borderRadius: 2, boxShadow: 3, px: 5, py: 6,
         display: "flex", flexDirection: "column", alignItems: "center",
@@ -224,15 +239,15 @@ const CreatedQuizPage: React.FC = () => {
             <Button
               onClick={handleNext}
               variant="contained"
-              disabled={!isFormValid}
+              disabled={!isFormValid || loading}
               sx={{
                 mt: 3, bgcolor: "#8181d8", borderRadius: 2, fontWeight: "bold",
                 px: 6, py: 1.5, alignSelf: "flex-end",
-                opacity: !isFormValid ? 0.6 : 1,
-                cursor: !isFormValid ? 'not-allowed' : 'pointer'
+                opacity: !isFormValid || loading ? 0.6 : 1,
+                cursor: !isFormValid || loading ? 'not-allowed' : 'pointer'
               }}
             >
-              Next
+              {loading ? "Loading..." : "Next"}
             </Button>
           </Box>
         </Box>

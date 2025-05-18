@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import {Box, Button, ButtonGroup, IconButton, Paper, Typography,} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/GeneralHomePage/logo.png";
@@ -20,6 +13,8 @@ import { useLocation } from "react-router-dom";
 import Popper from "@mui/material/Popper";
 import type { PopperProps } from "@mui/material/Popper";
 
+import board from "../assets/QuizProfDetailsPage/board.png";
+
 //ovie se za checkbox-ot
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
@@ -32,6 +27,7 @@ import { linkBase } from "../linkBase";
 import { QuizInterface } from "../interfaces/QuizInterface";
 import { object } from "prop-types";
 
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -39,6 +35,7 @@ const top100Films = [
   { title: "The Shawshank Redemption", year: 1994 },
   { title: "The Godfather", year: 1972 },
 ];
+
 
 const CustomPopper = (props: PopperProps) => (
   <Popper
@@ -115,9 +112,9 @@ const cloudTextStyle = {
 const updatedCloudTextStyle = {
   fontFamily: "Abhaya Libre, serif",
   fontWeight: "700",
-  textAlign: "left", // LEFT align the text
+  textAlign: "left", 
   color: "rgb(106, 62, 167)",
-  margin: 0, // Remove all margins
+  margin: 0, 
 };
 
 const TitleStyle = {
@@ -139,11 +136,11 @@ const QuizProfDetailsPage: React.FC = () => {
   const [quizzes, setQuizzes] = useState<QuizInterface[]>([]);
   //za da go zemam quiz
   const location = useLocation();
-  const { quizId } = location.state || {};
+  const { quizId, subject, title } = location.state || {};
   const [quiz, setQuiz] = useState<QuizInterface | null>(null);
   //za da znam koi se invited students
   const [selectedUsers, setSelectedUsers] = useState<UserInterface[]>([]);
-  const [invitedStudents, setInvitedStudents] = useState<number[]>([]); // <-- додади го ова
+  const [invitedStudents, setInvitedStudents] = useState<number[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -212,7 +209,7 @@ const QuizProfDetailsPage: React.FC = () => {
 
         console.log("All users:", data);
         console.log("Student users:", students);
-        // Step 3: Update na state so useri filtrirani
+        
         setAllUsers(studentUsers);
 
         console.log("Student users:", studentUsers);
@@ -254,7 +251,7 @@ const QuizProfDetailsPage: React.FC = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `quiz_${quizId}.pdf`; // или друго име ако знаеш
+      link.download = `quiz_${quizId}.pdf`; 
       link.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -351,7 +348,8 @@ const QuizProfDetailsPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8090/api/v1/Quiz/add-participant",
+        // "http://localhost:8090/api/v1/Quiz/add-participant",
+        `${linkBase}/Quiz/add-participant`,
         {
           method: "POST",
           headers: {
@@ -519,20 +517,9 @@ const QuizProfDetailsPage: React.FC = () => {
               mt: 3,
             }}
           >
-            {quiz?.title || "Quiz Title"}
+            {subject || title}
+            {/* // {quiz?.title || "Quiz Title"} */}
           </Typography>
-
-          {/* <Typography
-                    nema kaj nas category
-                        sx={{
-                            ...updatedCloudTextStyle,
-                            fontSize: '10pt',
-                            lineHeight: 1.2,
-                            wordBreak: 'break-word',
-                            whiteSpace: 'normal',
-                        }}>
-                        Category: Mathematics
-                    </Typography> */}
         </Box>
 
         {/* Quiz Title Content Section */}

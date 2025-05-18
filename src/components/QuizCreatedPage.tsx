@@ -2,6 +2,7 @@ import { Box, Button} from "@mui/material";
 import "../styles/QuizStudentDetailsPage.css"
 import created from "../assets/QuizCreated/created.png";
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 //za link na kopchinja
 import { useNavigate } from "react-router-dom";
@@ -9,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 
 const QuizFinishedPage = () => {
+  const location = useLocation();
+  const {quizId, subject} = location.state || {};
+
   const navigate = useNavigate();
     return (
       <Box
@@ -50,6 +54,7 @@ const QuizFinishedPage = () => {
             {/* Centered button using auto margins */}
             <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
               <Button
+              onClick={() => navigate('/quiz-prof-details', {state: {subject}})}
                 variant="contained"
                 sx={{
                   position: 'absolute',
@@ -71,7 +76,7 @@ const QuizFinishedPage = () => {
   
         {/* Right-aligned Back button */}
         
-        <Button onClick={() => navigate('/quiz-prof-details')}
+        <Button onClick={() => navigate('/quizes-teacher')}
           variant="contained"
           sx={{
             position: 'absolute', 

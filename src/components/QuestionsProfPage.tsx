@@ -16,7 +16,7 @@ const choiceKeys: ChoiceKey[] = ["A", "B", "C"];
 
 const QuestionsProfPage = () => {
   const location = useLocation();
-  const { quizId, questions } = location.state || {};
+  const { quizId, questions, subject } = location.state || {};
 
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -222,7 +222,7 @@ const QuestionsProfPage = () => {
 
   const handleDoneClick = async () => {
     await handleSaveChanges();
-    navigate("/quiz-created");
+    navigate("/quiz-created", {state: {subject}}); //za prakjanje id na kviz
   };
 
   if (!currentUser) return <div>Loading user data...</div>;
