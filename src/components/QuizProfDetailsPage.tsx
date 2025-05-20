@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, IconButton, Paper, Typography, } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/GeneralHomePage/logo.png";
@@ -20,6 +13,8 @@ import { useLocation } from "react-router-dom";
 import Popper from "@mui/material/Popper";
 import type { PopperProps } from "@mui/material/Popper";
 
+import board from "../assets/QuizProfDetailsPage/board.png";
+
 //ovie se za checkbox-ot
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
@@ -32,6 +27,7 @@ import { linkBase } from "../linkBase";
 import { QuizInterface } from "../interfaces/QuizInterface";
 import { object } from "prop-types";
 
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
@@ -39,6 +35,7 @@ const top100Films = [
   { title: "The Shawshank Redemption", year: 1994 },
   { title: "The Godfather", year: 1972 },
 ];
+
 
 const CustomPopper = (props: PopperProps) => (
   <Popper
@@ -115,9 +112,9 @@ const cloudTextStyle = {
 const updatedCloudTextStyle = {
   fontFamily: "Abhaya Libre, serif",
   fontWeight: "700",
-  textAlign: "left", // LEFT align the text
+  textAlign: "left",
   color: "rgb(106, 62, 167)",
-  margin: 0, // Remove all margins
+  margin: 0,
 };
 
 const TitleStyle = {
@@ -139,11 +136,11 @@ const QuizProfDetailsPage: React.FC = () => {
   const [quizzes, setQuizzes] = useState<QuizInterface[]>([]);
   //za da go zemam quiz
   const location = useLocation();
-  const { quizId } = location.state || {};
+  const { quizId, subject, title } = location.state || {};
   const [quiz, setQuiz] = useState<QuizInterface | null>(null);
   //za da znam koi se invited students
   const [selectedUsers, setSelectedUsers] = useState<UserInterface[]>([]);
-  const [invitedStudents, setInvitedStudents] = useState<number[]>([]); // <-- додади го ова
+  const [invitedStudents, setInvitedStudents] = useState<number[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -212,7 +209,7 @@ const QuizProfDetailsPage: React.FC = () => {
 
         console.log("All users:", data);
         console.log("Student users:", students);
-        // Step 3: Update na state so useri filtrirani
+
         setAllUsers(studentUsers);
 
         console.log("Student users:", studentUsers);
@@ -237,7 +234,7 @@ const QuizProfDetailsPage: React.FC = () => {
     if (!token) throw new Error("No access token found");
     try {
       const response = await fetch(
-        `http://localhost:8090/api/v1/Quiz/download-file?quizid=${quizId}`,
+        `${linkBase}/Quiz/download-file?quizid=${quizId}`,
         {
           method: "GET",
           headers: {
@@ -254,7 +251,7 @@ const QuizProfDetailsPage: React.FC = () => {
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = `quiz_${quizId}.pdf`; // или друго име ако знаеш
+      link.download = `quiz_${quizId}.pdf`;
       link.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -267,7 +264,7 @@ const QuizProfDetailsPage: React.FC = () => {
     if (!token) throw new Error("No access token found");
     try {
       const response = await fetch(
-        `http://localhost:8090/api/v1/Quiz/quiz-statistics-export?quizid=${quizId}`,
+        `${linkBase}/Quiz/quiz-statistics-export?quizid=${quizId}`,
         {
           method: "GET",
           headers: {
@@ -351,7 +348,8 @@ const QuizProfDetailsPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8090/api/v1/Quiz/add-participant",
+        // "http://localhost:8090/api/v1/Quiz/add-participant",
+        `${linkBase}/Quiz/add-participant`,
         {
           method: "POST",
           headers: {
@@ -519,20 +517,9 @@ const QuizProfDetailsPage: React.FC = () => {
               mt: 3,
             }}
           >
-            {quiz?.title || "Quiz Title"}
+            {subject || title}
+            {/* // {quiz?.title || "Quiz Title"} */}
           </Typography>
-
-          {/* <Typography
-                    nema kaj nas category
-                        sx={{
-                            ...updatedCloudTextStyle,
-                            fontSize: '10pt',
-                            lineHeight: 1.2,
-                            wordBreak: 'break-word',
-                            whiteSpace: 'normal',
-                        }}>
-                        Category: Mathematics
-                    </Typography> */}
         </Box>
 
         {/* Quiz Title Content Section */}
@@ -576,107 +563,111 @@ const QuizProfDetailsPage: React.FC = () => {
                 Quiz Explanation Document
               </Typography>
             </Box>
-          </Box>
-
-          {/* Instruction Text */}
-          <Box
-            sx={{
-              marginTop: 10,
-              marginLeft: "50px",
-              maxWidth: "400px",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Typography
-              variant="h4"
+            {/* Instruction Text */}
+            <Box
               sx={{
-                fontSize: "1rem",
-                marginBottom: 2,
-                textAlign: "left",
-                fontWeight: "bold",
-                fontFamily: "'Montserrat', sans-serif !important",
+                marginTop: 10,
+                marginLeft: "50px",
+                maxWidth: "400px",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              Review the quiz as students will see it. Ensure all questions and
-              answers are correctly generated.
-            </Typography>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#6C63FF",
-                textTransform: "none",
-                alignSelf: "flex-start",
-              }}
-            >
-              Preview Quiz
-            </Button>
-          </Box>
-        </Box>
-
-        {/* Right side: Checkbox */}
-        <Autocomplete
-          multiple
-          options={studentUsers}
-          disableCloseOnSelect
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(Object);
-          }} //tuka beshe newValue ili nes, Object jas dodadov
-          inputValue={inputValue}
-          onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
-          getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-          renderOption={(props, option) => {
-            const { key, ...optionProps } = props;
-            const isInvited = invitedStudents.includes(option.id);
-            return (
-              <li
-                key={key}
-                {...optionProps}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 12px",
+              <Typography
+                variant="h4"
+                sx={{
+                  fontSize: "1rem",
+                  marginBottom: 2,
+                  textAlign: "left",
+                  fontWeight: "bold",
+                  fontFamily: "'Montserrat', sans-serif !important",
                 }}
               >
-                <span>
-                  {option.firstName} {option.lastName}
-                </span>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  disabled={isInvited}
-                  onClick={() => handleSendInvitation(option.id)}
+                Review the quiz as students will see it. Ensure all questions and
+                answers are correctly generated.
+              </Typography>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#6C63FF",
+                  textTransform: "none",
+                  alignSelf: "flex-start",
+                }}
+              >
+                Preview Quiz
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Right side: Checkbox */}
+          <Autocomplete
+            multiple
+            options={studentUsers}
+            disableCloseOnSelect
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(Object(newValue));
+            }} //tuka beshe newValue ili nes, Object jas dodadov
+            open={true}
+            disablePortal={true}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+            getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+            renderOption={(props, option) => {
+              const { key, ...optionProps } = props;
+              const isInvited = invitedStudents.includes(option.id);
+              return (
+                <li
+                  key={key}
+                  {...optionProps}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "8px 12px",
+                  }}
                 >
-                  {isInvited ? "Invited" : "Send Invitation"}
-                </Button>
-              </li>
-            );
-          }}
-          renderTags={() => null}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Students"
-              placeholder="Select students"
-            />
-          )}
-          style={{ width: 500 }}
-          popupIcon={null}
-          PopperComponent={CustomPopper}
-          slotProps={{
-            paper: {
-              sx: {
-                maxHeight: 300,
-                overflowY: "auto",
+                  <span>
+                    {option.firstName} {option.lastName}
+                  </span>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    disabled={isInvited}
+                    onClick={() => handleSendInvitation(option.id)}
+                  >
+                    {isInvited ? "Invited" : "Send Invitation"}
+                  </Button>
+                </li>
+              );
+            }}
+            renderTags={() => null}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Students"
+                placeholder="Select students"
+              />
+            )}
+            style={{ width: 500 }}
+            popupIcon={null}
+            PopperComponent={CustomPopper}
+            slotProps={{
+              paper: {
+                sx: {
+                  maxHeight: 300,
+                  overflowY: "auto",
+                },
               },
-            },
-          }}
-        />
+            }}
+          />
+
+        </Box>
+
+
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", mb: "80px" }}>
         <Box
           sx={{
             display: "flex",

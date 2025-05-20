@@ -79,9 +79,9 @@ const cloudTextStyle = {
 const updatedCloudTextStyle = {
   fontFamily: "Abhaya Libre, serif",
   fontWeight: "700",
-  textAlign: "left", // LEFT align the text
+  textAlign: "left", 
   color: "rgb(106, 62, 167)",
-  margin: 0, // Remove all margins
+  margin: 0, 
 };
 
 const TitleStyle = {
@@ -100,6 +100,7 @@ const QuizStudentDetailsPage: React.FC = () => {
   //za da go zemam quiz
   const location = useLocation();
   const { quizId } = location.state || {};
+
   const [quiz, setQuiz] = useState<QuizInterface | null>(null);
   const getCurrentUser = async () => {
     try {
@@ -457,7 +458,7 @@ const QuizStudentDetailsPage: React.FC = () => {
                   textTransform: "none",
                   alignSelf: "flex-start",
                 }}
-                onClick={() => navigate("/quiz-preview")}
+                onClick={() => navigate("/quiz-preview", { state: {quizId: quiz?.id, title: quiz?.title} })}
               >
                 Start Quiz
               </Button>

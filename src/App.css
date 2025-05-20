@@ -45,3 +45,7 @@
     transform: rotate(360deg);
   }
 }
+
+ul[role="listbox"]::-webkit-scrollbar {
+  width: 6px;
+}
