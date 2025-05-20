@@ -25,6 +25,8 @@ import loginImg from "../assets/LogInUser/login-image.png";
 import { UserInterface } from "../interfaces/UserInterface";
 import { QuizInterface } from "../interfaces/QuizInterface";
 import { linkBase } from "../linkBase";
+import { GetQuizQuestionsInterface } from "../interfaces/GetQuizQuestionsInterface";
+import { json } from "stream/consumers";
 
 const middleButtons = {
   gap: 2,
@@ -92,7 +94,7 @@ const cloudTextStyle = {
   marginRight: 5,
 };
 
-const colors = ["#656ED3", "#FEF3BB", "FFD9D8", "82BDA9", "#A99BD4", "#E49573"];
+const colors = ["#656ED3", "#FEF3BB", "#FFD9D8", "#82BDA9", "#A99BD4", "#E49573"];
 
 const formatDate = (isoString: string): string => {
   const date = new Date(isoString);
@@ -107,6 +109,8 @@ const QuizesStudentPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
   const [quizzes, setQuizzes] = useState<QuizInterface[]>([]);
+  const [questions, setQuestions] = useState<GetQuizQuestionsInterface[]>([]);
+  const [questionsCount, setQuestionsCount] = useState<{ [quizId: number]: number }>({});
 
   const getCurrentUser = async () => {
     try {
@@ -133,6 +137,7 @@ const QuizesStudentPage: React.FC = () => {
       return null;
     }
   };
+
   const getQuizzes = async (userId: number) => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -212,6 +217,49 @@ const QuizesStudentPage: React.FC = () => {
       return null;
     }
   };
+
+  const getQuizQuestions = async (quizId: number): Promise<GetQuizQuestionsInterface[] | null> => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) return null;
+
+      const response = await fetch(`${linkBase}/Question/by-quizz?quizId=${quizId}`, {
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const questions: GetQuizQuestionsInterface[] = await response.json();
+      setQuestions(questions);
+      return questions;
+    } catch (error) {
+      console.error("Failed to fetch quizzes:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchAllQuestionsCounts = async () => {
+      const counts: { [quizId: number]: number } = {};
+      const fetches = quizzes.map(async (quiz) => {
+        const questions = await getQuizQuestions(quiz.id);
+        counts[quiz.id] = questions?.length ?? 0;
+      });
+      await Promise.all(fetches);
+      setQuestionsCount(counts);
+    };
+
+    if (quizzes.length > 0) {
+      fetchAllQuestionsCounts();
+    }
+  }, [quizzes]);
+
+
 
   return (
     <div style={{ minHeight: "100vh", height: "fit-content" }}>
@@ -444,6 +492,9 @@ const QuizesStudentPage: React.FC = () => {
                 }}
               >
                 Date created: {formatDate(quiz.createdAt)}
+              </Typography>
+              <Typography>
+                {questionsCount[quiz.id] ?? 0} questions
               </Typography>
             </Box>
           </Card>
