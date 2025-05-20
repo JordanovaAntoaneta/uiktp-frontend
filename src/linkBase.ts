@@ -1,0 +1,1 @@
+export const linkBase = 'http://localhost:8090/api/v1'
