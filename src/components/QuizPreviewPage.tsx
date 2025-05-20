@@ -35,7 +35,7 @@ const QuizPage: React.FC = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   //za hintot
-  const [hint, setHint] = useState<string | null> (null);
+  const [hint, setHint] = useState<string | null>(null);
   const [loadingHint, setLoadingHint] = useState<boolean>(false);
 
   //state za user-ot, za da moze da se zima na site str
@@ -45,7 +45,7 @@ const QuizPage: React.FC = () => {
 
 
   //za da se zeme current user:
-    const fetchCurrentUser = async () => {
+  const fetchCurrentUser = async () => {
     const token = localStorage.getItem("accessToken");
     try {
       const response = await fetch(`${linkBase}/User/me`, {
@@ -53,7 +53,7 @@ const QuizPage: React.FC = () => {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          Accept: "application/json", 
+          Accept: "application/json",
         },
       });
 
@@ -69,44 +69,44 @@ const QuizPage: React.FC = () => {
 
 
   const handleAnswerSubmit = async () => {
-  if (!selectedAnswer || !currentUser) return;
+    if (!selectedAnswer || !currentUser) return;
 
-  const token = localStorage.getItem("accessToken");
-  const currentQuestion = questions[currentQuestionIndex];
+    const token = localStorage.getItem("accessToken");
+    const currentQuestion = questions[currentQuestionIndex];
 
-  // Map "A", "B", "C" to actual text values
-  const answerMap = {
-    A: currentQuestion.choiceA,
-    B: currentQuestion.choiceB,
-    C: currentQuestion.choiceC,
+    // Map "A", "B", "C" to actual text values
+    const answerMap = {
+      A: currentQuestion.choiceA,
+      B: currentQuestion.choiceB,
+      C: currentQuestion.choiceC,
+    };
+
+    const answerText = answerMap[selectedAnswer as "A" | "B" | "C"];
+
+    try {
+      const response = await fetch(`${linkBase}/UserAnswer`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          questionId: currentQuestion.id,
+          userId: currentUser.id,
+          selectedAnswer: answerText, // ✅ Use actual answer text
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit answer");
+
+      const data = await response.json();
+      console.log("Answer submitted:", data);
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+    }
   };
 
-  const answerText = answerMap[selectedAnswer as "A" | "B" | "C"];
-
-  try {
-    const response = await fetch(`${linkBase}/UserAnswer`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        questionId: currentQuestion.id,
-        userId: currentUser.id,
-        selectedAnswer: answerText, // ✅ Use actual answer text
-      }),
-    });
-
-    if (!response.ok) throw new Error("Failed to submit answer");
-
-    const data = await response.json();
-    console.log("Answer submitted:", data);
-  } catch (error) {
-    console.error("Error submitting answer:", error);
-  }
-};
-
-    const fetchHint = async () => {
+  const fetchHint = async () => {
     const currentQuestion = questions[currentQuestionIndex];
     setLoadingHint(true);
 
@@ -125,8 +125,8 @@ const QuizPage: React.FC = () => {
 
       if (!response.ok) throw new Error("Failed to fetch hint");
 
-      const data = await response.text(); 
-      setHint(data); 
+      const data = await response.text();
+      setHint(data);
     } catch (error) {
       console.error("Error fetching hint:", error);
       setHint("Hint unavailable. Try again later.");
@@ -170,15 +170,15 @@ const QuizPage: React.FC = () => {
 
   //za user
   useEffect(() => {
-  const getUser = async () => {
-    const user = await fetchCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-    }
-  };
+    const getUser = async () => {
+      const user = await fetchCurrentUser();
+      if (user) {
+        setCurrentUser(user);
+      }
+    };
 
-  getUser();
-}, []);
+    getUser();
+  }, []);
 
 
   if (loading) {
@@ -252,7 +252,7 @@ const QuizPage: React.FC = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton onClick={fetchHint} disabled={loadingHint}>
-          <img src={lightbulb} alt="Lightbulb" style={{ height: 90, opacity: loadingHint ? 0.5 : 1, cursor: "pointer" }} />
+            <img src={lightbulb} alt="Lightbulb" style={{ height: 90, opacity: loadingHint ? 0.5 : 1, cursor: "pointer" }} />
           </IconButton>
           <Paper
             elevation={3}
@@ -385,7 +385,7 @@ const QuizPage: React.FC = () => {
               setSelectedAnswer(null);
               setHint(null);
             } else {
-              navigate("/quiz-finished", {state: {userId: currentUser.id, quizId}});
+              navigate("/quiz-finished", { state: { userId: currentUser.id, quizId } });
             }
           }}
           sx={{
@@ -397,7 +397,7 @@ const QuizPage: React.FC = () => {
             fontWeight: "bold",
             mt: 1,
             mb: 1,
-            opacity: !selectedAnswer ? 0.5 : 1, 
+            opacity: !selectedAnswer ? 0.5 : 1,
             cursor: !selectedAnswer ? "not-allowed" : "pointer",
           }}
         >
